@@ -49,7 +49,7 @@ A single received SIP message walks through this pipeline. Most of what looks li
 
 ### 2. The Runtime
 - [2.1 Process model](02-process-model.md) — main, attendant, timer, workers — what each one is for ✅
-- 2.2 Memory architecture — `pkg` vs `shm`, the custom allocator, lifetime rules
+- [2.2 Memory architecture](03-memory-architecture.md) — `pkg` vs `shm`, the custom allocator, lifetime rules ✅
 - 2.3 Concurrency primitives — locks, atomic ops, lockless paths
 - 2.4 Lifecycle — startup, config reload, graceful shutdown
 
