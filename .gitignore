@@ -16,3 +16,10 @@ dist/
 build/
 _site/
 .docusaurus/
+
+# MkDocs
+site/
+.venv-mkdocs/
+
+# Generated landings (copied from README.md by CI before build)
+docs/*/index.md

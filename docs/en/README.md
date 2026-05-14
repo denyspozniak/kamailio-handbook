@@ -1,7 +1,7 @@
 <h1 align="center">Kamailio Handbook — English</h1>
 
 <p align="center">
-  <em>Architecture deep-dive for the Kamailio SIP server.</em>
+  <em>How Kamailio is built on the inside.</em>
 </p>
 
 <p align="center">
@@ -12,8 +12,8 @@
 
 ---
 
-> [!NOTE]
-> This handbook explains *how Kamailio is built* and *why* — design decisions, internal machinery, architectural patterns. It's a companion to the [official docs](https://www.kamailio.org/wikidocs/), not a substitute.
+> [!IMPORTANT]
+> This handbook is **deliberately not a re-telling of the official docs**. It assumes you already know what Kamailio is at a surface level and instead drills into the runtime, the message lifecycle, the script engine, KEMI, and the architectural tricks that make Kamailio behave the way it does. There is no module-by-module reference here.
 
 ## How a SIP request flows through Kamailio
 
@@ -40,54 +40,57 @@ flowchart LR
     class Decision branch
 ```
 
-A single received SIP message walks through this pipeline — and most of what looks like "magic" in a Kamailio config is just deciding which way it branches.
+A single received SIP message walks through this pipeline. Most of what looks like "magic" in a Kamailio config is just deciding which way it branches — and the handbook unpacks every box above.
 
 ## Table of contents
 
 ### 1. Preface
-- [1.1 Introduction](01-introduction.md) — what Kamailio is, why it matters ✅
-- 1.2 Getting started (brief) — minimum needed to follow the architecture chapters
+- [1.1 Introduction](01-introduction.md) — signalling vs media, mental model, what to expect ✅
 
-### 2. Architecture (main focus)
-- 2.1 Overview — high-level picture, where Kamailio sits in a VoIP stack
-- 2.2 SIP fundamentals — the protocol shape that drives every design choice
-- 2.3 Process model & concurrency — workers, timers, shared memory
-- 2.4 Request processing pipeline — how a SIP message flows through the server
-- 2.5 Configuration language — the DSL, why it exists, what it solves
-- 2.6 Module system — loading, lifecycle, exported functions, dependency model
-- 2.7 State management — `tm`, `dialog`, `usrloc` and how state is held
-- 2.8 Transport layer — UDP, TCP, TLS, WebSocket, listeners, connections
-- 2.9 Database abstraction — `db_*` API, decoupling logic from storage
-- 2.10 Control plane — RPC, MI, `kamcmd`, observability hooks
+### 2. The Runtime
+- 2.1 Process model — main, attendant, timer, workers — what each one is for
+- 2.2 Memory architecture — `pkg` vs `shm`, the custom allocator, lifetime rules
+- 2.3 Concurrency primitives — locks, atomic ops, lockless paths
+- 2.4 Lifecycle — startup, config reload, graceful shutdown
 
-### 3. Configuration patterns
-- 3.1 Core parameters worth understanding
-- 3.2 Routing logic — `request_route`, branch/failure/onreply routes
-- 3.3 Pseudo-variables & transformations
+### 3. SIP Message Lifecycle
+- 3.1 Reception — sockets, listeners, how transport demultiplexes
+- 3.2 Parsing strategy — lazy headers, what gets parsed when, the cost model
+- 3.3 The routing engine — `request_route`, `branch_route`, `failure_route`, `onreply_route`, `event_route`
+- 3.4 Forwarding and replies — what actually happens when a message leaves
 
-### 4. Key modules (architectural deep-dives)
-- 4.1 Modules overview — categories and selection logic
-- 4.2 `tm` — transaction layer
-- 4.3 `dialog` — stateful call tracking
-- 4.4 `dispatcher` — load balancing and failover
-- 4.5 `rtpengine` — media plane integration
-- 4.6 `registrar` + `usrloc` — location service
+### 4. The Script Engine
+- 4.1 The cfg DSL — why a custom language, what it optimises for
+- 4.2 Parsing, AST, execution — from `kamailio.cfg` to per-message bytecode
+- 4.3 Module-function dispatch — the C↔script FFI
+- 4.4 Pseudo-variables as an indirection layer — how `$var(x)`, `$avp(y)`, `$hdr(z)` actually work
 
-### 5. Deployment patterns
-- 5.1 Registrar server
-- 5.2 Outbound proxy
-- 5.3 Load balancer
-- 5.4 WebSocket gateway
+### 5. KEMI — embedded scripting
+- 5.1 What problem KEMI solves
+- 5.2 The bridge — embedding Lua, Python, JS, Ruby into the C runtime
+- 5.3 Lifecycle — when KEMI runs, what it sees, how state crosses the boundary
+- 5.4 Tradeoffs — when KEMI wins, when native cfg wins
 
-### 6. Operations (architecture-aware)
-- 6.1 Logging
-- 6.2 Monitoring
-- 6.3 Troubleshooting from first principles
+### 6. State, Transactions, Dialogs
+- 6.1 Transactions (`tm`) — hash tables in shm, timer wheels, retransmission
+- 6.2 Dialogs — how `dialog` augments `tm` to track full calls
+- 6.3 In-memory caches with DB sync — the `usrloc` pattern
 
-### 7. Reference
-- 7.1 Pseudo-variables cheat sheet
-- 7.2 RPC commands
-- 7.3 Glossary
+### 7. Control Plane
+- 7.1 RPC architecture — JSON-RPC, BINRPC, command exporters
+- 7.2 `kamcmd` — the operator's lever
+- 7.3 Event routes — programmable hooks into runtime lifecycle
+
+### 8. Cool architectural tricks
+- 8.1 Topology hiding (`topos`) — rewriting calls so the topology vanishes
+- 8.2 Async transactions — `t_suspend` / `t_continue` for non-blocking flows
+- 8.3 `htable` — shared-memory hash tables as a poor man's Redis
+- 8.4 `dispatcher` — hash-based stickiness, gateway sets, failover algorithms
+- 8.5 `dmq` — distributed state sync between Kamailio instances
+
+### 9. Reference
+- 9.1 Process roles glossary
+- 9.2 Term map
 
 ---
 

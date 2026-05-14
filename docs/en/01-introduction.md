@@ -83,10 +83,10 @@ SIP message arrives  →  parsed and sanity-checked
 The **routing script** is where the operator's intent lives. Everything else — modules, the transaction engine, the database layer, the transport layer — is machinery that the script orchestrates. The chapters that follow take that machinery apart, one piece at a time.
 
 > [!TIP]
-> Before moving on, read [1.2 Getting started](02-getting-started.md) to install Kamailio and run a trivial config. The architecture chapters assume you can boot Kamailio and watch a SIP message hit it.
+> The chapters that follow assume you've installed Kamailio at least once and watched it process a message. If you haven't, [the official quick-start](https://www.kamailio.org/wikidocs/) is faster than anything this handbook could write. Come back here when you want to know why what just happened, happened.
 
 ---
 
 <p align="center">
-  <a href="README.md">← Table of contents</a> · <a href="02-getting-started.md">Next: 1.2 Getting started →</a>
+  <a href="README.md">← Table of contents</a> · <em>Next: 2.1 Process model (coming)</em>
 </p>

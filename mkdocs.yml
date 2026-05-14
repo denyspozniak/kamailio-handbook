@@ -1,0 +1,93 @@
+site_name: Kamailio Handbook
+site_description: An architecture-focused, bilingual deep-dive into the Kamailio SIP server
+site_url: https://denyspozniak.github.io/kamailio-handbook/
+site_author: Denys Pozniak
+repo_url: https://github.com/denyspozniak/kamailio-handbook
+repo_name: denyspozniak/kamailio-handbook
+edit_uri: edit/main/docs/
+
+theme:
+  name: material
+  language: en
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: amber
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      accent: amber
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.top
+    - navigation.tracking
+    - navigation.indexes
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+    - content.action.edit
+    - toc.follow
+  icon:
+    repo: fontawesome/brands/github
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.highlight:
+      anchor_linenums: true
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - attr_list
+  - md_in_html
+  - tables
+  - footnotes
+  - toc:
+      permalink: true
+
+plugins:
+  - search
+  - i18n:
+      docs_structure: folder
+      languages:
+        - locale: en
+          default: true
+          name: English
+          build: true
+        - locale: uk
+          name: Українська
+          build: true
+
+exclude_docs: |
+  /**/README.md
+
+extra:
+  alternate:
+    - name: English
+      link: /kamailio-handbook/
+      lang: en
+    - name: Українська
+      link: /kamailio-handbook/uk/
+      lang: uk
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/denyspozniak
+
+copyright: MIT licensed
