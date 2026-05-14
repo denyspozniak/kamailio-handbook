@@ -73,10 +73,10 @@ A single received SIP message walks through this pipeline. Most of what looks li
 - 4.4 Pseudo-variables as an indirection layer — how `$var(x)`, `$avp(y)`, `$hdr(z)` actually work
 
 ### 5. KEMI — embedded scripting
-- 5.1 What problem KEMI solves
-- 5.2 The bridge — embedding Lua, Python, JS, Ruby into the C runtime
-- 5.3 Lifecycle — when KEMI runs, what it sees, how state crosses the boundary
-- 5.4 Tradeoffs — when KEMI wins, when native cfg wins
+- [5.1 What problem KEMI solves](12-kemi-overview.md) — when the cfg DSL stops being enough ✅
+- [5.2 The bridge](13-kemi-bridge.md) — embedding Lua, Python, JS, Ruby into the C runtime ✅
+- [5.3 Lifecycle](14-kemi-lifecycle.md) — per-worker interpreter, what survives between messages, reload ✅
+- [5.4 Tradeoffs](15-kemi-tradeoffs.md) — when KEMI wins, when native cfg wins, the hybrid pattern ✅
 
 ### 6. State, Transactions, Dialogs
 - 6.1 Transactions (`tm`) — hash tables in shm, timer wheels, retransmission
