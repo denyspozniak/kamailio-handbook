@@ -142,5 +142,5 @@ The next chapter takes the lumps you've queued and walks them through the routin
 ---
 
 <p align="center">
-  <a href="./">← Table of contents</a> · <a href="08-parsed-message.md">← 3.2 The parsed message</a> · <em>Next: 3.4 The routing engine (coming)</em>
+  <a href="./">← Table of contents</a> · <a href="08-parsed-message.md">← 3.2 The parsed message</a> · <a href="10-routing-engine.md">Next: 3.4 The routing engine →</a>
 </p>

@@ -63,8 +63,8 @@ A single received SIP message walks through this pipeline. Most of what looks li
 - [3.1 Reception](07-reception.md) — sockets, listeners, how transport demultiplexes ✅
 - [3.2 The parsed message](08-parsed-message.md) — `sip_msg` struct, **lazy** header parsing, the cost model ✅
 - [3.3 Lumps](09-lumps.md) — how mutations are *queued* rather than applied (this is the speed trick) ✅
-- 3.4 The routing engine — `request_route`, `branch_route`, `failure_route`, `onreply_route`, `event_route`
-- 3.5 Forwarding and replies — assembling the outgoing message from buffer + lumps
+- [3.4 The routing engine](10-routing-engine.md) — `request_route`, `branch_route`, `failure_route`, `onreply_route`, `event_route` ✅
+- [3.5 Forwarding and replies](11-forwarding.md) — assembling the outgoing message from buffer + lumps ✅
 
 ### 4. The Script Engine
 - 4.1 The cfg DSL — why a custom language, what it optimises for
