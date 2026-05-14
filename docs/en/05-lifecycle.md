@@ -112,5 +112,5 @@ The next part of the handbook moves out of the runtime and into the SIP message 
 ---
 
 <p align="center">
-  <a href="./">← Table of contents</a> · <a href="04-concurrency.md">← 2.3 Concurrency primitives</a> · <em>Next: 3.1 Reception (coming)</em>
+  <a href="./">← Table of contents</a> · <a href="04-concurrency.md">← 2.3 Concurrency primitives</a> · <a href="06-sizing-and-tuning.md">Next: 2.5 Sizing &amp; tuning →</a>
 </p>

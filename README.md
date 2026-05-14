@@ -91,8 +91,9 @@ Full ToC: [English](docs/en/README.md) · [Українська](docs/uk/README.
 
 | Priority | Source | Used for |
 |---|---|---|
-| 1 | [kamailio.org/wikidocs](https://www.kamailio.org/wikidocs/) | Background, operational know-how, surface-level API |
-| 2 | [github.com/kamailio/kamailio](https://github.com/kamailio/kamailio) | Source of truth for internals — actual implementation |
+| 1 | [asipto/kamailio-devel-guide](https://github.com/asipto/kamailio-devel-guide) | Internals reference by the original maintainer — data lumps, parser, memory, locking, RPC |
+| 2 | [kamailio.org/wikidocs](https://www.kamailio.org/wikidocs/) | Background, operational know-how, surface-level API |
+| 3 | [github.com/kamailio/kamailio](https://github.com/kamailio/kamailio) | Source of truth — actual implementation in C |
 
 ## License
 

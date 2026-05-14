@@ -16,8 +16,9 @@
 > This handbook is **deliberately not a re-telling of the official docs**. It assumes you already know what Kamailio is at a surface level and instead drills into the runtime, the message lifecycle, the script engine, KEMI, and the architectural tricks that make Kamailio behave the way it does. There is no module-by-module reference here.
 
 **Sources used:**
+- [asipto/kamailio-devel-guide](https://github.com/asipto/kamailio-devel-guide) — internals reference by the original maintainer; goes deep on data lumps, parser, memory, locking, RPC.
 - [kamailio.org/wikidocs](https://www.kamailio.org/wikidocs/) — for background and the surface-level API.
-- [github.com/kamailio/kamailio](https://github.com/kamailio/kamailio) — source of truth for everything internal.
+- [github.com/kamailio/kamailio](https://github.com/kamailio/kamailio) — actual implementation in C, the final source of truth.
 
 ## How a SIP request flows through Kamailio
 
@@ -56,9 +57,10 @@ A single received SIP message walks through this pipeline. Most of what looks li
 - [2.2 Memory architecture](03-memory-architecture.md) — `pkg` vs `shm`, the custom allocator, lifetime rules ✅
 - [2.3 Concurrency primitives](04-concurrency.md) — locks, atomic ops, per-bucket sharding ✅
 - [2.4 Lifecycle](05-lifecycle.md) — startup, config reload, graceful shutdown ✅
+- [2.5 Sizing & tuning](06-sizing-and-tuning.md) — workers, memory, kernel knobs per traffic pattern (proxy / registrar / stateful / WS) ✅
 
 ### 3. SIP Message Lifecycle
-- 3.1 Reception — sockets, listeners, how transport demultiplexes
+- [3.1 Reception](07-reception.md) — sockets, listeners, how transport demultiplexes ✅
 - 3.2 The parsed message — `sip_msg` struct, **lazy** header parsing, the cost model
 - 3.3 Lumps — how mutations are *queued* rather than applied (this is the speed trick)
 - 3.4 The routing engine — `request_route`, `branch_route`, `failure_route`, `onreply_route`, `event_route`

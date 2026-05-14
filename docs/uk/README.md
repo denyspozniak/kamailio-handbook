@@ -16,8 +16,9 @@
 > Цей посібник **свідомо не переказує офіційну документацію**. Передбачається, що ви вже знаєте, що таке Kamailio на поверхні. Натомість тут — занурення в рантайм, життєвий цикл повідомлень, движок скриптів, KEMI та архітектурні фішки, які формують поведінку Kamailio. Розділу «модуль за модулем» тут не буде.
 
 **Використані джерела:**
+- [asipto/kamailio-devel-guide](https://github.com/asipto/kamailio-devel-guide) — посібник з внутрішнього устрою від оригінального мейнтейнера; глибоко про data lumps, парсер, пам'ять, локи, RPC.
 - [kamailio.org/wikidocs](https://www.kamailio.org/wikidocs/) — фонова інформація та поверхневе API.
-- [github.com/kamailio/kamailio](https://github.com/kamailio/kamailio) — джерело істини для всього внутрішнього.
+- [github.com/kamailio/kamailio](https://github.com/kamailio/kamailio) — реальна імплементація в C, фінальне джерело істини.
 
 ## Як SIP-запит проходить через Kamailio
 
@@ -56,9 +57,10 @@ flowchart LR
 - [2.2 Архітектура пам'яті](03-memory-architecture.md) — `pkg` vs `shm`, кастомний алокатор, правила життєвого циклу ✅
 - [2.3 Примітиви конкурентності](04-concurrency.md) — локи, atomic-операції, per-bucket шардинг ✅
 - [2.4 Життєвий цикл](05-lifecycle.md) — старт, перезавантаження конфігу, graceful shutdown ✅
+- [2.5 Sizing & tuning](06-sizing-and-tuning.md) — воркери, пам'ять, kernel-кнопки під паттерн трафіку (proxy / registrar / stateful / WS) ✅
 
 ### 3. Життєвий цикл SIP-повідомлення
-- 3.1 Прийом — сокети, слухачі, як транспорт демультиплексує
+- [3.1 Прийом](07-reception.md) — сокети, слухачі, як транспорт демультиплексує ✅
 - 3.2 Розпарсене повідомлення — структура `sip_msg`, **lazy**-парсинг заголовків, ціна
 - 3.3 Lumps — як мутації *чергуються*, а не застосовуються одразу (це і є той самий speed-trick)
 - 3.4 Движок маршрутизації — `request_route`, `branch_route`, `failure_route`, `onreply_route`, `event_route`
