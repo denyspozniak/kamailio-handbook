@@ -45,7 +45,7 @@ A single received SIP message walks through this pipeline — and most of what l
 ## Table of contents
 
 ### 1. Preface
-- 1.1 Introduction — what Kamailio is, why it matters
+- [1.1 Introduction](01-introduction.md) — what Kamailio is, why it matters ✅
 - 1.2 Getting started (brief) — minimum needed to follow the architecture chapters
 
 ### 2. Architecture (main focus)
