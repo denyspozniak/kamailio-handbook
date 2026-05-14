@@ -133,5 +133,5 @@ The next chapter moves out of the state-tracking modules and into the control pl
 ---
 
 <p align="center">
-  <a href="./">← Table of contents</a> · <a href="17-dialogs.md">← 6.2 Dialogs</a> · <em>Next: 7.1 RPC architecture (coming)</em>
+  <a href="./">← Table of contents</a> · <a href="17-dialogs.md">← 6.2 Dialogs</a> · <a href="19-topos.md">Jump to 8.1 Topology hiding →</a>
 </p>

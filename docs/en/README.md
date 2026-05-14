@@ -89,11 +89,11 @@ A single received SIP message walks through this pipeline. Most of what looks li
 - 7.3 Event routes — programmable hooks into runtime lifecycle
 
 ### 8. Cool architectural tricks
-- 8.1 Topology hiding (`topos`) — rewriting calls so the topology vanishes
-- 8.2 Async transactions — `t_suspend` / `t_continue` for non-blocking flows
-- 8.3 `htable` — shared-memory hash tables as a poor man's Redis
-- 8.4 `dispatcher` — hash-based stickiness, gateway sets, failover algorithms
-- 8.5 `dmq` — distributed state sync between Kamailio instances
+- [8.1 Topology hiding (`topos`)](19-topos.md) — rewriting calls so the topology vanishes ✅
+- [8.2 Async transactions](20-async-transactions.md) — `t_suspend` / `t_continue` for non-blocking flows ✅
+- [8.3 `htable`](21-htable.md) — shared-memory hash tables as a poor man's Redis ✅
+- [8.4 `dispatcher`](22-dispatcher.md) — hash-based stickiness, gateway sets, failover algorithms ✅
+- [8.5 `dmq`](23-dmq.md) — distributed state sync between Kamailio instances ✅
 
 ### 9. Reference
 - 9.1 Process roles glossary
