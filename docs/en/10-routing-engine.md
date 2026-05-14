@@ -50,7 +50,12 @@ flowchart TD
 
 **`request_route`** — the entry point for every incoming **request**. This is where most of what people think of as "the Kamailio config" lives: routing decisions, authentication, rewrite rules, the call to `t_relay()` or `forward()`. There is exactly one `request_route` block.
 
-**`onreply_route`** — runs for every incoming **reply**, before the reply is forwarded back to the UAC. The bare `onreply_route { … }` runs unconditionally; named variants `onreply_route[N]` only run for replies belonging to transactions that opted in via `t_on_reply("N")`. The named ones are how you intercept the reply for a specific call you've forwarded — to do SDP rewriting, accounting on 200 OK, etc.
+**`reply_route`** — fires in the **core's reply-processing path** for *every* incoming reply, before tm gets a chance to match it to a transaction. Useful for inspecting or short-circuiting replies regardless of transaction state — drop malformed replies, count metrics at the wire layer, apply policies that don't need transaction context. Returning `0` (drop) from `reply_route` stops further processing of that reply entirely. Distinct from `onreply_route`: this one runs whether or not the reply belongs to an active transaction.
+
+**`onreply_route`** — runs as part of tm's transaction processing, after tm has matched the incoming reply to a transaction in shm. The bare `onreply_route { … }` runs unconditionally for matched replies; named variants `onreply_route[N]` only run for replies belonging to transactions that opted in via `t_on_reply("N")`. The named ones are how you intercept the reply for a specific call you've forwarded — to do SDP rewriting, accounting on 200 OK, etc.
+
+> [!TIP]
+> Mental model for the two reply routes: `reply_route` is **wire-level** (every byte that looks like a reply), `onreply_route` is **transaction-level** (replies that belong to a `tm` cell). In a stateful proxy that uses `tm` for everything, most reply logic lives in `onreply_route`. `reply_route` is the right place for filtering, rate-limiting, or stateless replies that bypass `tm` entirely.
 
 **`branch_route[N]`** — runs **once per branch**, just before that branch's outgoing message is constructed and sent. This is where per-branch modifications go: a different Record-Route per branch, branch-specific headers, decisions based on which gateway the branch will hit. Activated via `t_on_branch("N")` before `t_relay()`.
 

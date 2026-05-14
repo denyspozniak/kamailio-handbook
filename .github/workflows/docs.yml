@@ -39,8 +39,10 @@ jobs:
           # from the source <h1 align="center"> (that's raw HTML, not markdown).
           # Without this, mkdocs falls back to the filename and labels both the
           # nav entry and the in-page ToC header as "Index".
-          sed -i '1i---\ntitle: Kamailio Handbook — English\n---\n' docs/en/index.md
-          sed -i '1i---\ntitle: Kamailio Handbook — Українська\n---\n' docs/uk/index.md
+          # Also pin edit_url to the real README.md so the site's pencil icon
+          # doesn't 404 (index.md is a CI artifact, not committed).
+          sed -i '1i---\ntitle: Kamailio Handbook — English\nedit_url: https://github.com/denyspozniak/kamailio-handbook/edit/main/docs/en/README.md\n---\n' docs/en/index.md
+          sed -i '1i---\ntitle: Kamailio Handbook — Українська\nedit_url: https://github.com/denyspozniak/kamailio-handbook/edit/main/docs/uk/README.md\n---\n' docs/uk/index.md
 
           # Rewrite the in-README language-switcher path for the mkdocs site:
           # default locale is served at /kamailio-handbook/, the other at /kamailio-handbook/<lang>/.

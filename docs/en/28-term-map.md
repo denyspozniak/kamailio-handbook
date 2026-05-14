@@ -65,5 +65,5 @@ This concludes the handbook. The next time something in production looks strange
 ---
 
 <p markdown="1" align="center">
-  [← Table of contents](../) · [← 9.1 Process roles](27-process-roles.md)
+  [← Table of contents](../) · [← 9.1 Process roles](27-process-roles.md) · [Next: 9.3 What's new →](30-whats-new.md)
 </p>

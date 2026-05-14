@@ -63,7 +63,7 @@ A single received SIP message walks through this pipeline. Most of what looks li
 - [3.1 Reception](07-reception.md) — sockets, listeners, how transport demultiplexes ✅
 - [3.2 The parsed message](08-parsed-message.md) — `sip_msg` struct, **lazy** header parsing, the cost model ✅
 - [3.3 Lumps](09-lumps.md) — how mutations are *queued* rather than applied (this is the speed trick) ✅
-- [3.4 The routing engine](10-routing-engine.md) — `request_route`, `branch_route`, `failure_route`, `onreply_route`, `event_route` ✅
+- [3.4 The routing engine](10-routing-engine.md) — `request_route`, `reply_route`, `onreply_route`, `branch_route`, `failure_route`, `event_route` ✅
 - [3.5 Forwarding and replies](11-forwarding.md) — assembling the outgoing message from buffer + lumps ✅
 
 ### 4. The Script Engine
@@ -95,6 +95,7 @@ A single received SIP message walks through this pipeline. Most of what looks li
 ### 9. Reference
 - [9.1 Process roles glossary](27-process-roles.md) — what each `ps`-visible process actually is ✅
 - [9.2 Term map](28-term-map.md) — quick glossary of Kamailio-specific terms ✅
+- [9.3 What's new and what's in development](30-whats-new.md) — version landscape (5.8 → 6.0 → 6.1), new modules, archived modules, where to follow devel ✅
 
 ---
 

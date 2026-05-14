@@ -63,7 +63,7 @@ flowchart LR
 - [3.1 Прийом](07-reception.md) — сокети, слухачі, як транспорт демультиплексує ✅
 - [3.2 Розпарсене повідомлення](08-parsed-message.md) — структура `sip_msg`, **lazy**-парсинг заголовків, ціна ✅
 - [3.3 Lumps](09-lumps.md) — як мутації *чергуються*, а не застосовуються одразу (це і є той самий speed-trick) ✅
-- [3.4 Движок маршрутизації](10-routing-engine.md) — `request_route`, `branch_route`, `failure_route`, `onreply_route`, `event_route` ✅
+- [3.4 Движок маршрутизації](10-routing-engine.md) — `request_route`, `reply_route`, `onreply_route`, `branch_route`, `failure_route`, `event_route` ✅
 - [3.5 Форвардинг і відповіді](11-forwarding.md) — складання вихідного повідомлення з buffer'а та lump'ів ✅
 
 ### 4. Движок скриптів
@@ -95,6 +95,7 @@ flowchart LR
 ### 9. Довідник
 - [9.1 Глосарій ролей процесів](27-process-roles.md) — хто є хто в `ps`-виводі ✅
 - [9.2 Карта термінів](28-term-map.md) — швидкий глосарій Kamailio-specific ✅
+- [9.3 Що нового і що в розробці](30-whats-new.md) — версійний ландшафт (5.8 → 6.0 → 6.1), нові модулі, заархівовані, де стежити за devel ✅
 
 ---
 
