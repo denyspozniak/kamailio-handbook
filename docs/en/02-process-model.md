@@ -111,5 +111,5 @@ The next chapter takes apart the memory architecture that makes all this coopera
 ---
 
 <p align="center">
-  <a href="README.md">← Table of contents</a> · <a href="01-introduction.md">← 1.1 Introduction</a> · <a href="03-memory-architecture.md">Next: 2.2 Memory architecture →</a>
+  <a href="./">← Table of contents</a> · <a href="01-introduction.md">← 1.1 Introduction</a> · <a href="03-memory-architecture.md">Next: 2.2 Memory architecture →</a>
 </p>

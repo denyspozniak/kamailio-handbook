@@ -91,9 +91,8 @@ Full ToC: [English](docs/en/README.md) · [Українська](docs/uk/README.
 
 | Priority | Source | Used for |
 |---|---|---|
-| 1 | [jiriatipteldotorg/kamailio-doc](https://jiriatipteldotorg.github.io/kamailio-doc/) | Backbone for chapter structure |
-| 2 | [kamailio.org/wikidocs](https://www.kamailio.org/wikidocs/) | Filling gaps, operational know-how |
-| 3 | [github.com/kamailio/kamailio](https://github.com/kamailio/kamailio) | Source of truth for internals |
+| 1 | [kamailio.org/wikidocs](https://www.kamailio.org/wikidocs/) | Background, operational know-how, surface-level API |
+| 2 | [github.com/kamailio/kamailio](https://github.com/kamailio/kamailio) | Source of truth for internals — actual implementation |
 
 ## License
 

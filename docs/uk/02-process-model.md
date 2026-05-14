@@ -111,5 +111,5 @@ for (;;) {
 ---
 
 <p align="center">
-  <a href="README.md">← Зміст</a> · <a href="01-introduction.md">← 1.1 Вступ</a> · <a href="03-memory-architecture.md">Далі: 2.2 Архітектура пам'яті →</a>
+  <a href="./">← Зміст</a> · <a href="01-introduction.md">← 1.1 Вступ</a> · <a href="03-memory-architecture.md">Далі: 2.2 Архітектура пам'яті →</a>
 </p>

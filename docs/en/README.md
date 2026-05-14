@@ -15,6 +15,10 @@
 > [!IMPORTANT]
 > This handbook is **deliberately not a re-telling of the official docs**. It assumes you already know what Kamailio is at a surface level and instead drills into the runtime, the message lifecycle, the script engine, KEMI, and the architectural tricks that make Kamailio behave the way it does. There is no module-by-module reference here.
 
+**Sources used:**
+- [kamailio.org/wikidocs](https://www.kamailio.org/wikidocs/) — for background and the surface-level API.
+- [github.com/kamailio/kamailio](https://github.com/kamailio/kamailio) — source of truth for everything internal.
+
 ## How a SIP request flows through Kamailio
 
 ```mermaid
@@ -50,7 +54,7 @@ A single received SIP message walks through this pipeline. Most of what looks li
 ### 2. The Runtime
 - [2.1 Process model](02-process-model.md) — main, attendant, timer, workers — what each one is for ✅
 - [2.2 Memory architecture](03-memory-architecture.md) — `pkg` vs `shm`, the custom allocator, lifetime rules ✅
-- 2.3 Concurrency primitives — locks, atomic ops, lockless paths
+- [2.3 Concurrency primitives](04-concurrency.md) — locks, atomic ops, per-bucket sharding ✅
 - 2.4 Lifecycle — startup, config reload, graceful shutdown
 
 ### 3. SIP Message Lifecycle
@@ -95,5 +99,5 @@ A single received SIP message walks through this pipeline. Most of what looks li
 ---
 
 <p align="center">
-  <a href="../uk/README.md">🇺🇦 Українська</a> · <a href="../../README.md">↑ Back to root</a>
+  <a href="../uk/">🇺🇦 Українська</a>
 </p>
