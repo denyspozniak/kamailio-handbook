@@ -1,16 +1,46 @@
-# Kamailio Handbook — Українська
+<h1 align="center">Kamailio Handbook — Українська</h1>
 
-Архітектурно-орієнтований посібник для SIP-сервера [Kamailio](https://www.kamailio.org/) (цільова версія: **5.8.x**).
+<p align="center">
+  <em>Архітектурний розбір SIP-сервера Kamailio.</em>
+</p>
 
-Це **не** заміна офіційній документації. Мета — пояснити, *як побудований Kamailio* і *чому* саме так: дизайнерські рішення, внутрішня механіка, архітектурні патерни. Щоб оператори та розробники могли міркувати про поведінку системи глибше, ніж дозволяє інструкція «як встановити».
+<p align="center">
+  <img alt="Kamailio" src="https://img.shields.io/badge/Kamailio-5.8.x-1f6feb?style=flat-square">
+  <img alt="Мова" src="https://img.shields.io/badge/мова-Українська-bf8700?style=flat-square">
+  <a href="../en/README.md"><img alt="Switch to English" src="https://img.shields.io/badge/switch_to-English-1f6feb?style=flat-square"></a>
+</p>
 
-## Джерела
+---
 
-Матеріал перероблено, у порядку пріоритету, з:
+> [!NOTE]
+> Цей посібник пояснює, *як побудований Kamailio* і *чому* — дизайнерські рішення, внутрішню механіку, архітектурні патерни. Він доповнює [офіційну документацію](https://www.kamailio.org/wikidocs/), а не замінює її.
 
-1. [jiriatipteldotorg/kamailio-doc](https://jiriatipteldotorg.github.io/kamailio-doc/) — основне
-2. [kamailio.org/wikidocs](https://www.kamailio.org/wikidocs/) — допоміжне
-3. [github.com/kamailio/kamailio](https://github.com/kamailio/kamailio) — джерело істини для крайніх випадків
+## Як SIP-запит проходить через Kamailio
+
+```mermaid
+flowchart LR
+    In([SIP IN]) --> Parser[Парсер]
+    Parser --> Sanity[Sanity-перевірки]
+    Sanity --> RR[request_route]
+    RR --> Mods[[Функції модулів<br/>tm · rr · auth · dispatcher · …]]
+    Mods --> Decision{Stateful?}
+    Decision -- так --> TM[tm: створити транзакцію]
+    Decision -- ні --> SL[sl: stateless-форвард]
+    TM --> Out([SIP OUT])
+    SL --> Out
+
+    classDef io fill:#238636,stroke:#238636,color:#fff
+    classDef core fill:#1f6feb,stroke:#1f6feb,color:#fff
+    classDef mod fill:#bf8700,stroke:#bf8700,color:#fff
+    classDef branch fill:#6e7681,stroke:#6e7681,color:#fff
+
+    class In,Out io
+    class Parser,Sanity,RR core
+    class Mods,TM,SL mod
+    class Decision branch
+```
+
+Одне отримане SIP-повідомлення проходить через цей конвеєр — і більшість того, що в конфізі Kamailio виглядає як «магія», це просто вибір гілки на цьому шляху.
 
 ## Зміст
 
@@ -61,4 +91,6 @@
 
 ---
 
-🇬🇧 [English version](../en/README.md) · [На головну](../../README.md)
+<p align="center">
+  <a href="../en/README.md">🇬🇧 English</a> · <a href="../../README.md">↑ На головну</a>
+</p>

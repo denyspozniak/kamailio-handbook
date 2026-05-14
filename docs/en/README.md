@@ -1,16 +1,46 @@
-# Kamailio Handbook — English
+<h1 align="center">Kamailio Handbook — English</h1>
 
-An architecture-focused handbook for the [Kamailio](https://www.kamailio.org/) SIP server (target version: **5.8.x**).
+<p align="center">
+  <em>Architecture deep-dive for the Kamailio SIP server.</em>
+</p>
 
-This is **not** a replacement for the official docs. The goal is to explain *how Kamailio is built* and *why* — the design decisions, internal machinery, and architectural patterns — so that operators and developers can reason about behaviour beyond what a "how to install" guide teaches.
+<p align="center">
+  <img alt="Kamailio" src="https://img.shields.io/badge/Kamailio-5.8.x-1f6feb?style=flat-square">
+  <img alt="Lang" src="https://img.shields.io/badge/lang-English-1f6feb?style=flat-square">
+  <a href="../uk/README.md"><img alt="Switch to Ukrainian" src="https://img.shields.io/badge/switch_to-Українська-bf8700?style=flat-square"></a>
+</p>
 
-## Sources
+---
 
-Material is distilled, in priority order, from:
+> [!NOTE]
+> This handbook explains *how Kamailio is built* and *why* — design decisions, internal machinery, architectural patterns. It's a companion to the [official docs](https://www.kamailio.org/wikidocs/), not a substitute.
 
-1. [jiriatipteldotorg/kamailio-doc](https://jiriatipteldotorg.github.io/kamailio-doc/) — primary
-2. [kamailio.org/wikidocs](https://www.kamailio.org/wikidocs/) — supplementary
-3. [github.com/kamailio/kamailio](https://github.com/kamailio/kamailio) — source of truth for edge cases
+## How a SIP request flows through Kamailio
+
+```mermaid
+flowchart LR
+    In([SIP IN]) --> Parser[Parser]
+    Parser --> Sanity[Sanity checks]
+    Sanity --> RR[request_route]
+    RR --> Mods[[Module functions<br/>tm · rr · auth · dispatcher · …]]
+    Mods --> Decision{Stateful?}
+    Decision -- yes --> TM[tm: create transaction]
+    Decision -- no --> SL[sl: stateless forward]
+    TM --> Out([SIP OUT])
+    SL --> Out
+
+    classDef io fill:#238636,stroke:#238636,color:#fff
+    classDef core fill:#1f6feb,stroke:#1f6feb,color:#fff
+    classDef mod fill:#bf8700,stroke:#bf8700,color:#fff
+    classDef branch fill:#6e7681,stroke:#6e7681,color:#fff
+
+    class In,Out io
+    class Parser,Sanity,RR core
+    class Mods,TM,SL mod
+    class Decision branch
+```
+
+A single received SIP message walks through this pipeline — and most of what looks like "magic" in a Kamailio config is just deciding which way it branches.
 
 ## Table of contents
 
@@ -61,4 +91,6 @@ Material is distilled, in priority order, from:
 
 ---
 
-🇺🇦 [Ukrainian version](../uk/README.md) · [Back to root](../../README.md)
+<p align="center">
+  <a href="../uk/README.md">🇺🇦 Українська</a> · <a href="../../README.md">↑ Back to root</a>
+</p>
