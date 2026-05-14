@@ -141,6 +141,6 @@ SIP-проксі, що чіпає кожне повідомлення жмене
 
 ---
 
-<p align="center">
-  <a href="./">← Зміст</a> · <a href="08-parsed-message.md">← 3.2 Розпарсене повідомлення</a> · <a href="10-routing-engine.md">Далі: 3.4 Движок маршрутизації →</a>
+<p markdown="1" align="center">
+  [← Зміст](../) · [← 3.2 Розпарсене повідомлення](08-parsed-message.md) · [Далі: 3.4 Движок маршрутизації →](10-routing-engine.md)
 </p>

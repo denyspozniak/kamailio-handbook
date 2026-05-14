@@ -106,6 +106,6 @@ The next chapter takes the other long-lived shm-backed structure — the registr
 
 ---
 
-<p align="center">
-  <a href="./">← Table of contents</a> · <a href="16-tm-internals.md">← 6.1 Transactions (tm)</a> · <a href="18-usrloc.md">Next: 6.3 usrloc pattern →</a>
+<p markdown="1" align="center">
+  [← Table of contents](../) · [← 6.1 Transactions (tm)](16-tm-internals.md) · [Next: 6.3 usrloc pattern →](18-usrloc.md)
 </p>

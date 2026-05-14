@@ -34,6 +34,13 @@ jobs:
         run: |
           cp docs/en/README.md docs/en/index.md
           cp docs/uk/README.md docs/uk/index.md
+          # Rewrite the in-README language-switcher path for the mkdocs site:
+          # default locale is served at /kamailio-handbook/, the other at /kamailio-handbook/<lang>/.
+          # The relative paths that work on GitHub (../uk/, ../en/) don't resolve correctly there.
+          sed -i -e 's|href="\.\./uk/"|href="uk/"|g' \
+                 -e 's|href="\.\./uk/README\.md"|href="uk/"|g'  docs/en/index.md
+          sed -i -e 's|href="\.\./en/"|href="../"|g' \
+                 -e 's|href="\.\./en/README\.md"|href="../"|g'  docs/uk/index.md
 
       - name: Build site
         run: mkdocs build --strict

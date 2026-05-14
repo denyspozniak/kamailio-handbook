@@ -64,6 +64,6 @@ This concludes the handbook. The next time something in production looks strange
 
 ---
 
-<p align="center">
-  <a href="./">← Table of contents</a> · <a href="27-process-roles.md">← 9.1 Process roles</a>
+<p markdown="1" align="center">
+  [← Table of contents](../) · [← 9.1 Process roles](27-process-roles.md)
 </p>

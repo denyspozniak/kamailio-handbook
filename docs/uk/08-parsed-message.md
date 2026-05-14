@@ -88,6 +88,6 @@ parse_body(msg);                     // розпарсити SDP чи інше �
 
 ---
 
-<p align="center">
-  <a href="./">← Зміст</a> · <a href="07-reception.md">← 3.1 Прийом</a> · <a href="09-lumps.md">Далі: 3.3 Lumps →</a>
+<p markdown="1" align="center">
+  [← Зміст](../) · [← 3.1 Прийом](07-reception.md) · [Далі: 3.3 Lumps →](09-lumps.md)
 </p>

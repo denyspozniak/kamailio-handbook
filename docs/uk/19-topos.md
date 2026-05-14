@@ -87,6 +87,6 @@ In-dialog-запити працюють через **lookup**: кожен BYE, r
 
 ---
 
-<p align="center">
-  <a href="./">← Зміст</a> · <a href="18-usrloc.md">← 6.3 Патерн usrloc</a> · <a href="20-async-transactions.md">Далі: 8.2 Async-транзакції →</a>
+<p markdown="1" align="center">
+  [← Зміст](../) · [← 6.3 Патерн usrloc](18-usrloc.md) · [Далі: 8.2 Async-транзакції →](20-async-transactions.md)
 </p>

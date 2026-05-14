@@ -110,6 +110,6 @@ kamcmd core.pkgmem all
 
 ---
 
-<p align="center">
-  <a href="./">← Зміст</a> · <a href="02-process-model.md">← 2.1 Процесна модель</a> · <a href="04-concurrency.md">Далі: 2.3 Примітиви конкурентності →</a>
+<p markdown="1" align="center">
+  [← Зміст](../) · [← 2.1 Процесна модель](02-process-model.md) · [Далі: 2.3 Примітиви конкурентності →](04-concurrency.md)
 </p>

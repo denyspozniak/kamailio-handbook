@@ -110,6 +110,6 @@ The next chapter covers the concurrency primitives — locks, atomics — that m
 
 ---
 
-<p align="center">
-  <a href="./">← Table of contents</a> · <a href="02-process-model.md">← 2.1 Process model</a> · <a href="04-concurrency.md">Next: 2.3 Concurrency primitives →</a>
+<p markdown="1" align="center">
+  [← Table of contents](../) · [← 2.1 Process model](02-process-model.md) · [Next: 2.3 Concurrency primitives →](04-concurrency.md)
 </p>

@@ -120,6 +120,6 @@ kamcmd dmq.process         # тригернути один раунд оброб
 
 ---
 
-<p align="center">
-  <a href="./">← Зміст</a> · <a href="22-dispatcher.md">← 8.4 dispatcher</a> · <a href="24-rpc-architecture.md">Далі: 7.1 Архітектура RPC →</a>
+<p markdown="1" align="center">
+  [← Зміст](../) · [← 8.4 dispatcher](22-dispatcher.md) · [Далі: 7.1 Архітектура RPC →](24-rpc-architecture.md)
 </p>

@@ -136,6 +136,6 @@ kamcmd htable.reload my_cache              # reload з БД
 
 ---
 
-<p align="center">
-  <a href="./">← Зміст</a> · <a href="20-async-transactions.md">← 8.2 Async-транзакції</a> · <a href="22-dispatcher.md">Далі: 8.4 dispatcher →</a>
+<p markdown="1" align="center">
+  [← Зміст](../) · [← 8.2 Async-транзакції](20-async-transactions.md) · [Далі: 8.4 dispatcher →](22-dispatcher.md)
 </p>

@@ -132,6 +132,6 @@ The next chapter moves out of the state-tracking modules and into the control pl
 
 ---
 
-<p align="center">
-  <a href="./">← Table of contents</a> · <a href="17-dialogs.md">← 6.2 Dialogs</a> · <a href="19-topos.md">Jump to 8.1 Topology hiding →</a>
+<p markdown="1" align="center">
+  [← Table of contents](../) · [← 6.2 Dialogs](17-dialogs.md) · [Jump to 8.1 Topology hiding →](19-topos.md)
 </p>

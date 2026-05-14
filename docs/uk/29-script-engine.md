@@ -88,6 +88,6 @@ if (!t_relay()) {
 
 ---
 
-<p align="center">
-  <a href="./">← Зміст</a> · <a href="28-term-map.md">← 9.2 Карта термінів</a>
+<p markdown="1" align="center">
+  [← Зміст](../) · [← 9.2 Карта термінів](28-term-map.md)
 </p>

@@ -120,6 +120,6 @@ The final part of the handbook is the reference material — process role glossa
 
 ---
 
-<p align="center">
-  <a href="./">← Table of contents</a> · <a href="22-dispatcher.md">← 8.4 dispatcher</a> · <a href="24-rpc-architecture.md">Next: 7.1 RPC architecture →</a>
+<p markdown="1" align="center">
+  [← Table of contents](../) · [← 8.4 dispatcher](22-dispatcher.md) · [Next: 7.1 RPC architecture →](24-rpc-architecture.md)
 </p>

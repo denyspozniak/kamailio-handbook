@@ -123,6 +123,6 @@ The next chapter takes the interpreter's per-worker lifecycle apart — when it'
 
 ---
 
-<p align="center">
-  <a href="./">← Table of contents</a> · <a href="12-kemi-overview.md">← 5.1 What KEMI solves</a> · <a href="14-kemi-lifecycle.md">Next: 5.3 KEMI lifecycle →</a>
+<p markdown="1" align="center">
+  [← Table of contents](../) · [← 5.1 What KEMI solves](12-kemi-overview.md) · [Next: 5.3 KEMI lifecycle →](14-kemi-lifecycle.md)
 </p>

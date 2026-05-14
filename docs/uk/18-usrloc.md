@@ -132,6 +132,6 @@ Trade-off: **між flush'ами БД відстає від реальності
 
 ---
 
-<p align="center">
-  <a href="./">← Зміст</a> · <a href="17-dialogs.md">← 6.2 Діалоги</a> · <a href="19-topos.md">Перехід до 8.1 Topology hiding →</a>
+<p markdown="1" align="center">
+  [← Зміст](../) · [← 6.2 Діалоги](17-dialogs.md) · [Перехід до 8.1 Topology hiding →](19-topos.md)
 </p>

@@ -128,6 +128,6 @@ The next chapter looks at the other half of the operator's surface area: event r
 
 ---
 
-<p align="center">
-  <a href="./">← Table of contents</a> · <a href="24-rpc-architecture.md">← 7.1 RPC architecture</a> · <a href="26-event-routes.md">Next: 7.3 Event routes →</a>
+<p markdown="1" align="center">
+  [← Table of contents](../) · [← 7.1 RPC architecture](24-rpc-architecture.md) · [Next: 7.3 Event routes →](26-event-routes.md)
 </p>

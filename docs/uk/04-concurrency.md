@@ -125,6 +125,6 @@ int  atomic_cmpxchg(atomic_t *v, int old, int new);
 
 ---
 
-<p align="center">
-  <a href="./">← Зміст</a> · <a href="03-memory-architecture.md">← 2.2 Архітектура пам'яті</a> · <a href="05-lifecycle.md">Далі: 2.4 Життєвий цикл →</a>
+<p markdown="1" align="center">
+  [← Зміст](../) · [← 2.2 Архітектура пам'яті](03-memory-architecture.md) · [Далі: 2.4 Життєвий цикл →](05-lifecycle.md)
 </p>

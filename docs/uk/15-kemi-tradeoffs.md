@@ -98,6 +98,6 @@ flowchart TD
 
 ---
 
-<p align="center">
-  <a href="./">← Зміст</a> · <a href="14-kemi-lifecycle.md">← 5.3 Lifecycle</a> · <a href="16-tm-internals.md">Далі: 6.1 Транзакції (tm) →</a>
+<p markdown="1" align="center">
+  [← Зміст](../) · [← 5.3 Lifecycle](14-kemi-lifecycle.md) · [Далі: 6.1 Транзакції (tm) →](16-tm-internals.md)
 </p>

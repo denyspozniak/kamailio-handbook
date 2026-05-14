@@ -136,6 +136,6 @@ sl_send_reply("200", "OK");
 
 ---
 
-<p align="center">
-  <a href="./">← Зміст</a> · <a href="10-routing-engine.md">← 3.4 Движок маршрутизації</a> · <a href="12-kemi-overview.md">Перехід до 5.1 KEMI →</a>
+<p markdown="1" align="center">
+  [← Зміст](../) · [← 3.4 Движок маршрутизації](10-routing-engine.md) · [Перехід до 5.1 KEMI →](12-kemi-overview.md)
 </p>

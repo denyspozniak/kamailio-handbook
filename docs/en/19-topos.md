@@ -87,6 +87,6 @@ The next chapter is about a different kind of architectural trick: making a rout
 
 ---
 
-<p align="center">
-  <a href="./">← Table of contents</a> · <a href="18-usrloc.md">← 6.3 usrloc pattern</a> · <a href="20-async-transactions.md">Next: 8.2 Async transactions →</a>
+<p markdown="1" align="center">
+  [← Table of contents](../) · [← 6.3 usrloc pattern](18-usrloc.md) · [Next: 8.2 Async transactions →](20-async-transactions.md)
 </p>

@@ -118,6 +118,6 @@ kamcmd dispatcher.reload                # перезавантажити таб�
 
 ---
 
-<p align="center">
-  <a href="./">← Зміст</a> · <a href="21-htable.md">← 8.3 htable</a> · <a href="23-dmq.md">Далі: 8.5 dmq →</a>
+<p markdown="1" align="center">
+  [← Зміст](../) · [← 8.3 htable](21-htable.md) · [Далі: 8.5 dmq →](23-dmq.md)
 </p>

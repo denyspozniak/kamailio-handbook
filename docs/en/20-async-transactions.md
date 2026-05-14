@@ -110,6 +110,6 @@ The next chapter is about a different kind of cross-message state: `htable`, the
 
 ---
 
-<p align="center">
-  <a href="./">← Table of contents</a> · <a href="19-topos.md">← 8.1 Topology hiding</a> · <a href="21-htable.md">Next: 8.3 htable →</a>
+<p markdown="1" align="center">
+  [← Table of contents](../) · [← 8.1 Topology hiding](19-topos.md) · [Next: 8.3 htable →](21-htable.md)
 </p>

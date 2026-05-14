@@ -110,6 +110,6 @@ The next chapter takes apart the memory architecture that makes all this coopera
 
 ---
 
-<p align="center">
-  <a href="./">← Table of contents</a> · <a href="01-introduction.md">← 1.1 Introduction</a> · <a href="03-memory-architecture.md">Next: 2.2 Memory architecture →</a>
+<p markdown="1" align="center">
+  [← Table of contents](../) · [← 1.1 Introduction](01-introduction.md) · [Next: 2.2 Memory architecture →](03-memory-architecture.md)
 </p>

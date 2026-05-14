@@ -123,6 +123,6 @@ kamcmd htable.reload my_cache
 
 ---
 
-<p align="center">
-  <a href="./">← Зміст</a> · <a href="24-rpc-architecture.md">← 7.1 Архітектура RPC</a> · <a href="26-event-routes.md">Далі: 7.3 Event routes →</a>
+<p markdown="1" align="center">
+  [← Зміст](../) · [← 7.1 Архітектура RPC](24-rpc-architecture.md) · [Далі: 7.3 Event routes →](26-event-routes.md)
 </p>

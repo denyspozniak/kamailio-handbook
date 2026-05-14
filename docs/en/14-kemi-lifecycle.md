@@ -110,6 +110,6 @@ The next chapter looks at when this whole edifice — the embedded interpreter, 
 
 ---
 
-<p align="center">
-  <a href="./">← Table of contents</a> · <a href="13-kemi-bridge.md">← 5.2 The bridge</a> · <a href="15-kemi-tradeoffs.md">Next: 5.4 KEMI tradeoffs →</a>
+<p markdown="1" align="center">
+  [← Table of contents](../) · [← 5.2 The bridge](13-kemi-bridge.md) · [Next: 5.4 KEMI tradeoffs →](15-kemi-tradeoffs.md)
 </p>

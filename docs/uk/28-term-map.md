@@ -64,6 +64,6 @@
 
 ---
 
-<p align="center">
-  <a href="./">← Зміст</a> · <a href="27-process-roles.md">← 9.1 Глосарій ролей</a>
+<p markdown="1" align="center">
+  [← Зміст](../) · [← 9.1 Глосарій ролей](27-process-roles.md)
 </p>

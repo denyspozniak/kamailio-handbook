@@ -116,6 +116,6 @@ The next chapter takes the routing decisions made in this engine and walks them 
 
 ---
 
-<p align="center">
-  <a href="./">← Table of contents</a> · <a href="09-lumps.md">← 3.3 Lumps</a> · <a href="11-forwarding.md">Next: 3.5 Forwarding and replies →</a>
+<p markdown="1" align="center">
+  [← Table of contents](../) · [← 3.3 Lumps](09-lumps.md) · [Next: 3.5 Forwarding and replies →](11-forwarding.md)
 </p>

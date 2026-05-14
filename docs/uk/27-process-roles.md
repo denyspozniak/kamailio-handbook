@@ -60,6 +60,6 @@ kamailio: DMQ Worker [0]
 
 ---
 
-<p align="center">
-  <a href="./">← Зміст</a> · <a href="26-event-routes.md">← 7.3 Event routes</a> · <a href="28-term-map.md">Далі: 9.2 Карта термінів →</a>
+<p markdown="1" align="center">
+  [← Зміст](../) · [← 7.3 Event routes](26-event-routes.md) · [Далі: 9.2 Карта термінів →](28-term-map.md)
 </p>

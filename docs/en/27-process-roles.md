@@ -60,6 +60,6 @@ The format is `kamailio: <role> [<index>]` for indexed workers. The `rank` menti
 
 ---
 
-<p align="center">
-  <a href="./">← Table of contents</a> · <a href="26-event-routes.md">← 7.3 Event routes</a> · <a href="28-term-map.md">Next: 9.2 Term map →</a>
+<p markdown="1" align="center">
+  [← Table of contents](../) · [← 7.3 Event routes](26-event-routes.md) · [Next: 9.2 Term map →](28-term-map.md)
 </p>

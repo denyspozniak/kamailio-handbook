@@ -72,6 +72,6 @@ The trade-off that buys is what the next three chapters take apart: how the brid
 
 ---
 
-<p align="center">
-  <a href="./">← Table of contents</a> · <a href="11-forwarding.md">← 3.5 Forwarding and replies</a> · <a href="13-kemi-bridge.md">Next: 5.2 The bridge →</a>
+<p markdown="1" align="center">
+  [← Table of contents](../) · [← 3.5 Forwarding and replies](11-forwarding.md) · [Next: 5.2 The bridge →](13-kemi-bridge.md)
 </p>

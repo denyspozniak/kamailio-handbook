@@ -136,6 +136,6 @@ That's it. Every other architectural piece in this handbook — the script engin
 
 ---
 
-<p align="center">
-  <a href="./">← Table of contents</a> · <a href="10-routing-engine.md">← 3.4 The routing engine</a> · <a href="12-kemi-overview.md">Jump to 5.1 KEMI →</a>
+<p markdown="1" align="center">
+  [← Table of contents](../) · [← 3.4 The routing engine](10-routing-engine.md) · [Jump to 5.1 KEMI →](12-kemi-overview.md)
 </p>

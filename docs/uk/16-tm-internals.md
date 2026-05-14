@@ -118,6 +118,6 @@ if (cell) {
 
 ---
 
-<p align="center">
-  <a href="./">← Зміст</a> · <a href="15-kemi-tradeoffs.md">← 5.4 KEMI tradeoffs</a> · <a href="17-dialogs.md">Далі: 6.2 Діалоги →</a>
+<p markdown="1" align="center">
+  [← Зміст](../) · [← 5.4 KEMI tradeoffs](15-kemi-tradeoffs.md) · [Далі: 6.2 Діалоги →](17-dialogs.md)
 </p>

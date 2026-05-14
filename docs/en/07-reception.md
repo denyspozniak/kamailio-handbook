@@ -80,6 +80,6 @@ The next chapter takes the `struct sip_msg` apart — what the parser actually p
 
 ---
 
-<p align="center">
-  <a href="./">← Table of contents</a> · <a href="06-sizing-and-tuning.md">← 2.5 Sizing &amp; tuning</a> · <a href="08-parsed-message.md">Next: 3.2 The parsed message →</a>
+<p markdown="1" align="center">
+  [← Table of contents](../) · [← 2.5 Sizing &amp; tuning](06-sizing-and-tuning.md) · [Next: 3.2 The parsed message →](08-parsed-message.md)
 </p>

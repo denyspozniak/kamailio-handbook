@@ -87,6 +87,6 @@ The **routing script** is where the operator's intent lives. Everything else —
 
 ---
 
-<p align="center">
-  <a href="./">← Table of contents</a> · <a href="02-process-model.md">Next: 2.1 Process model →</a>
+<p markdown="1" align="center">
+  [← Table of contents](../) · [Next: 2.1 Process model →](02-process-model.md)
 </p>

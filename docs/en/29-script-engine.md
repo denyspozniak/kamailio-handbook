@@ -88,6 +88,6 @@ If you've been working with Kamailio routes for a while and "why is my config do
 
 ---
 
-<p align="center">
-  <a href="./">← Table of contents</a> · <a href="28-term-map.md">← 9.2 Term map</a>
+<p markdown="1" align="center">
+  [← Table of contents](../) · [← 9.2 Term map](28-term-map.md)
 </p>

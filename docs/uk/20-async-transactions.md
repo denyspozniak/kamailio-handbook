@@ -110,6 +110,6 @@ sequenceDiagram
 
 ---
 
-<p align="center">
-  <a href="./">← Зміст</a> · <a href="19-topos.md">← 8.1 Topology hiding</a> · <a href="21-htable.md">Далі: 8.3 htable →</a>
+<p markdown="1" align="center">
+  [← Зміст](../) · [← 8.1 Topology hiding](19-topos.md) · [Далі: 8.3 htable →](21-htable.md)
 </p>

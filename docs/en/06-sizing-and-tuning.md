@@ -166,6 +166,6 @@ The kernel-side tuning that pays off across all patterns is small: increase UDP 
 
 ---
 
-<p align="center">
-  <a href="./">← Table of contents</a> · <a href="05-lifecycle.md">← 2.4 Lifecycle</a> · <a href="07-reception.md">Next: 3.1 Reception →</a>
+<p markdown="1" align="center">
+  [← Table of contents](../) · [← 2.4 Lifecycle](05-lifecycle.md) · [Next: 3.1 Reception →](07-reception.md)
 </p>

@@ -122,6 +122,6 @@ JSON-RPC через HTTP **теж не має built-in auth**, за дизайн
 
 ---
 
-<p align="center">
-  <a href="./">← Зміст</a> · <a href="23-dmq.md">← 8.5 dmq</a> · <a href="25-kamcmd.md">Далі: 7.2 kamcmd →</a>
+<p markdown="1" align="center">
+  [← Зміст](../) · [← 8.5 dmq](23-dmq.md) · [Далі: 7.2 kamcmd →](25-kamcmd.md)
 </p>

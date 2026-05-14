@@ -110,6 +110,6 @@ kamcmd app_python3.reload
 
 ---
 
-<p align="center">
-  <a href="./">← Зміст</a> · <a href="13-kemi-bridge.md">← 5.2 Bridge</a> · <a href="15-kemi-tradeoffs.md">Далі: 5.4 Tradeoffs →</a>
+<p markdown="1" align="center">
+  [← Зміст](../) · [← 5.2 Bridge](13-kemi-bridge.md) · [Далі: 5.4 Tradeoffs →](15-kemi-tradeoffs.md)
 </p>

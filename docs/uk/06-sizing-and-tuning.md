@@ -166,6 +166,6 @@ Kernel-side tuning, що окупається на всіх паттернах, 
 
 ---
 
-<p align="center">
-  <a href="./">← Зміст</a> · <a href="05-lifecycle.md">← 2.4 Життєвий цикл</a> · <a href="07-reception.md">Далі: 3.1 Прийом →</a>
+<p markdown="1" align="center">
+  [← Зміст](../) · [← 2.4 Життєвий цикл](05-lifecycle.md) · [Далі: 3.1 Прийом →](07-reception.md)
 </p>

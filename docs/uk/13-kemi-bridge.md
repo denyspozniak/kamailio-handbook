@@ -123,6 +123,6 @@ Bridge може йти в обидва боки:
 
 ---
 
-<p align="center">
-  <a href="./">← Зміст</a> · <a href="12-kemi-overview.md">← 5.1 Що вирішує KEMI</a> · <a href="14-kemi-lifecycle.md">Далі: 5.3 Lifecycle →</a>
+<p markdown="1" align="center">
+  [← Зміст](../) · [← 5.1 Що вирішує KEMI](12-kemi-overview.md) · [Далі: 5.3 Lifecycle →](14-kemi-lifecycle.md)
 </p>

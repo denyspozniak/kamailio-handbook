@@ -80,6 +80,6 @@ Cleanup на кроці 5 — це й те, що робить per-message lifeti
 
 ---
 
-<p align="center">
-  <a href="./">← Зміст</a> · <a href="06-sizing-and-tuning.md">← 2.5 Sizing &amp; tuning</a> · <a href="08-parsed-message.md">Далі: 3.2 Розпарсене повідомлення →</a>
+<p markdown="1" align="center">
+  [← Зміст](../) · [← 2.5 Sizing &amp; tuning](06-sizing-and-tuning.md) · [Далі: 3.2 Розпарсене повідомлення →](08-parsed-message.md)
 </p>

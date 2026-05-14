@@ -88,6 +88,6 @@ The way Kamailio resolves this constraint — the way it lets you add, remove, a
 
 ---
 
-<p align="center">
-  <a href="./">← Table of contents</a> · <a href="07-reception.md">← 3.1 Reception</a> · <a href="09-lumps.md">Next: 3.3 Lumps →</a>
+<p markdown="1" align="center">
+  [← Table of contents](../) · [← 3.1 Reception](07-reception.md) · [Next: 3.3 Lumps →](09-lumps.md)
 </p>

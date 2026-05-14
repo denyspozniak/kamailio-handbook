@@ -116,6 +116,6 @@ route[auth] {
 
 ---
 
-<p align="center">
-  <a href="./">← Зміст</a> · <a href="09-lumps.md">← 3.3 Lumps</a> · <a href="11-forwarding.md">Далі: 3.5 Форвардинг і відповіді →</a>
+<p markdown="1" align="center">
+  [← Зміст](../) · [← 3.3 Lumps](09-lumps.md) · [Далі: 3.5 Форвардинг і відповіді →](11-forwarding.md)
 </p>

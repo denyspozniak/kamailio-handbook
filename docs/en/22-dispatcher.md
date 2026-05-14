@@ -118,6 +118,6 @@ The next chapter is about coordinating state across multiple Kamailio instances 
 
 ---
 
-<p align="center">
-  <a href="./">← Table of contents</a> · <a href="21-htable.md">← 8.3 htable</a> · <a href="23-dmq.md">Next: 8.5 dmq →</a>
+<p markdown="1" align="center">
+  [← Table of contents](../) · [← 8.3 htable](21-htable.md) · [Next: 8.5 dmq →](23-dmq.md)
 </p>

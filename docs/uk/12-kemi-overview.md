@@ -72,6 +72,6 @@ Trade-off, який ви за це купуєте, — і є тим, що роз
 
 ---
 
-<p align="center">
-  <a href="./">← Зміст</a> · <a href="11-forwarding.md">← 3.5 Форвардинг і відповіді</a> · <a href="13-kemi-bridge.md">Далі: 5.2 Bridge →</a>
+<p markdown="1" align="center">
+  [← Зміст](../) · [← 3.5 Форвардинг і відповіді](11-forwarding.md) · [Далі: 5.2 Bridge →](13-kemi-bridge.md)
 </p>

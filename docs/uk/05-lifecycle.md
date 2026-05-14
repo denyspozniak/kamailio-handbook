@@ -111,6 +111,6 @@ kamcmd permissions.addressReload  # перезавантажити permissions
 
 ---
 
-<p align="center">
-  <a href="./">← Зміст</a> · <a href="04-concurrency.md">← 2.3 Примітиви конкурентності</a> · <a href="06-sizing-and-tuning.md">Далі: 2.5 Sizing &amp; tuning →</a>
+<p markdown="1" align="center">
+  [← Зміст](../) · [← 2.3 Примітиви конкурентності](04-concurrency.md) · [Далі: 2.5 Sizing &amp; tuning →](06-sizing-and-tuning.md)
 </p>

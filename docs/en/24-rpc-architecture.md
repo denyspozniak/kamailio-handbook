@@ -122,6 +122,6 @@ The next chapter looks at `kamcmd` specifically and the operational dashboard it
 
 ---
 
-<p align="center">
-  <a href="./">← Table of contents</a> · <a href="23-dmq.md">← 8.5 dmq</a> · <a href="25-kamcmd.md">Next: 7.2 kamcmd →</a>
+<p markdown="1" align="center">
+  [← Table of contents](../) · [← 8.5 dmq](23-dmq.md) · [Next: 7.2 kamcmd →](25-kamcmd.md)
 </p>

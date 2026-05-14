@@ -113,6 +113,6 @@ The next chapter wraps the handbook with a short reference: the process role glo
 
 ---
 
-<p align="center">
-  <a href="./">← Table of contents</a> · <a href="25-kamcmd.md">← 7.2 kamcmd</a> · <a href="27-process-roles.md">Next: 9.1 Process roles →</a>
+<p markdown="1" align="center">
+  [← Table of contents](../) · [← 7.2 kamcmd](25-kamcmd.md) · [Next: 9.1 Process roles →](27-process-roles.md)
 </p>

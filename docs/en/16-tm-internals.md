@@ -118,6 +118,6 @@ The next chapter takes the cell, adds dialog tracking on top of it, and explains
 
 ---
 
-<p align="center">
-  <a href="./">← Table of contents</a> · <a href="15-kemi-tradeoffs.md">← 5.4 KEMI tradeoffs</a> · <em>Next: 6.2 Dialogs (coming)</em>
+<p markdown="1" align="center">
+  [← Table of contents](../) · [← 5.4 KEMI tradeoffs](15-kemi-tradeoffs.md) · <em>Next: 6.2 Dialogs (coming)</em>
 </p>

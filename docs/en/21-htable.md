@@ -136,6 +136,6 @@ The next chapter takes the most common application of `htable`-shaped thinking �
 
 ---
 
-<p align="center">
-  <a href="./">← Table of contents</a> · <a href="20-async-transactions.md">← 8.2 Async transactions</a> · <a href="22-dispatcher.md">Next: 8.4 dispatcher →</a>
+<p markdown="1" align="center">
+  [← Table of contents](../) · [← 8.2 Async transactions](20-async-transactions.md) · [Next: 8.4 dispatcher →](22-dispatcher.md)
 </p>
