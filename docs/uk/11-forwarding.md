@@ -137,5 +137,5 @@ sl_send_reply("200", "OK");
 ---
 
 <p align="center">
-  <a href="./">← Зміст</a> · <a href="10-routing-engine.md">← 3.4 Движок маршрутизації</a> · <em>Далі: 4.1 Cfg DSL (готується)</em>
+  <a href="./">← Зміст</a> · <a href="10-routing-engine.md">← 3.4 Движок маршрутизації</a> · <a href="12-kemi-overview.md">Перехід до 5.1 KEMI →</a>
 </p>

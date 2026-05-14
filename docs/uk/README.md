@@ -73,10 +73,10 @@ flowchart LR
 - 4.4 Псевдо-змінні як рівень непрямості — як насправді працюють `$var(x)`, `$avp(y)`, `$hdr(z)`
 
 ### 5. KEMI — embedded scripting
-- 5.1 Яку проблему вирішує KEMI
-- 5.2 Bridge — як Lua, Python, JS, Ruby вбудовуються в C-рантайм
-- 5.3 Життєвий цикл — коли запускається KEMI, що бачить, як стан перетинає кордон
-- 5.4 Tradeoffs — коли виграє KEMI, коли native cfg
+- [5.1 Яку проблему вирішує KEMI](12-kemi-overview.md) — коли cfg DSL перестає вистачати ✅
+- [5.2 Bridge](13-kemi-bridge.md) — як Lua, Python, JS, Ruby вбудовуються в C-рантайм ✅
+- [5.3 Lifecycle](14-kemi-lifecycle.md) — per-worker-інтерпретатор, що переживає повідомлення, reload ✅
+- [5.4 Tradeoffs](15-kemi-tradeoffs.md) — коли виграє KEMI, коли native cfg, гібридний патерн ✅
 
 ### 6. Стан, транзакції, діалоги
 - 6.1 Транзакції (`tm`) — хеш-таблиці у shm, timer wheels, retransmission
