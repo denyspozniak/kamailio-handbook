@@ -23,3 +23,4 @@ site/
 
 # Generated landings (copied from README.md by CI before build)
 docs/*/index.md
+__pycache__/
