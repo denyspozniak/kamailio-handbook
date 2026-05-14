@@ -99,5 +99,5 @@ flowchart TD
 ---
 
 <p align="center">
-  <a href="./">← Зміст</a> · <a href="14-kemi-lifecycle.md">← 5.3 Lifecycle</a> · <em>Далі: 6.1 Transactions (tm) — готується</em>
+  <a href="./">← Зміст</a> · <a href="14-kemi-lifecycle.md">← 5.3 Lifecycle</a> · <a href="16-tm-internals.md">Далі: 6.1 Транзакції (tm) →</a>
 </p>

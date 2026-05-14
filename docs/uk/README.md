@@ -79,9 +79,9 @@ flowchart LR
 - [5.4 Tradeoffs](15-kemi-tradeoffs.md) — коли виграє KEMI, коли native cfg, гібридний патерн ✅
 
 ### 6. Стан, транзакції, діалоги
-- 6.1 Транзакції (`tm`) — хеш-таблиці у shm, timer wheels, retransmission
-- 6.2 Діалоги — як `dialog` доповнює `tm` для відстеження повного виклику
-- 6.3 In-memory кеші з DB-синхронізацією — патерн `usrloc`
+- [6.1 Транзакції (`tm`)](16-tm-internals.md) — хеш-таблиці у shm, timer wheels, retransmission ✅
+- [6.2 Діалоги](17-dialogs.md) — як `dialog` доповнює `tm` для відстеження повного виклику ✅
+- [6.3 Патерн `usrloc`](18-usrloc.md) — in-memory кеш, DB-sync, узагальнено ✅
 
 ### 7. Control plane
 - 7.1 Архітектура RPC — JSON-RPC, BINRPC, експорт команд
@@ -89,11 +89,11 @@ flowchart LR
 - 7.3 Event routes — програмовані хуки в життєвий цикл рантайму
 
 ### 8. Архітектурні фішки
-- 8.1 Topology hiding (`topos`) — переписування виклику так, щоб топологія зникла
-- 8.2 Async-транзакції — `t_suspend` / `t_continue` для неблокуючих сценаріїв
-- 8.3 `htable` — хеш-таблиці у спільній пам'яті як «бідний Redis»
-- 8.4 `dispatcher` — hash-based stickiness, набори шлюзів, failover-алгоритми
-- 8.5 `dmq` — синхронізація стану між інстансами Kamailio
+- [8.1 Topology hiding (`topos`)](19-topos.md) — переписування виклику так, щоб топологія зникла ✅
+- [8.2 Async-транзакції](20-async-transactions.md) — `t_suspend` / `t_continue` для неблокуючих сценаріїв ✅
+- [8.3 `htable`](21-htable.md) — хеш-таблиці у спільній пам'яті як «бідний Redis» ✅
+- [8.4 `dispatcher`](22-dispatcher.md) — hash-based stickiness, набори шлюзів, failover-алгоритми ✅
+- [8.5 `dmq`](23-dmq.md) — синхронізація стану між інстансами Kamailio ✅
 
 ### 9. Довідник
 - 9.1 Глосарій ролей процесів
