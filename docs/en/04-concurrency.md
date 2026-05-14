@@ -126,5 +126,5 @@ The next chapter covers the runtime's lifecycle — startup, reload, shutdown �
 ---
 
 <p align="center">
-  <a href="./">← Table of contents</a> · <a href="03-memory-architecture.md">← 2.2 Memory architecture</a> · <em>Next: 2.4 Lifecycle (coming)</em>
+  <a href="./">← Table of contents</a> · <a href="03-memory-architecture.md">← 2.2 Memory architecture</a> · <a href="05-lifecycle.md">Next: 2.4 Lifecycle →</a>
 </p>

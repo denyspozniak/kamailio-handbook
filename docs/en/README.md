@@ -55,13 +55,14 @@ A single received SIP message walks through this pipeline. Most of what looks li
 - [2.1 Process model](02-process-model.md) — main, attendant, timer, workers — what each one is for ✅
 - [2.2 Memory architecture](03-memory-architecture.md) — `pkg` vs `shm`, the custom allocator, lifetime rules ✅
 - [2.3 Concurrency primitives](04-concurrency.md) — locks, atomic ops, per-bucket sharding ✅
-- 2.4 Lifecycle — startup, config reload, graceful shutdown
+- [2.4 Lifecycle](05-lifecycle.md) — startup, config reload, graceful shutdown ✅
 
 ### 3. SIP Message Lifecycle
 - 3.1 Reception — sockets, listeners, how transport demultiplexes
-- 3.2 Parsing strategy — lazy headers, what gets parsed when, the cost model
-- 3.3 The routing engine — `request_route`, `branch_route`, `failure_route`, `onreply_route`, `event_route`
-- 3.4 Forwarding and replies — what actually happens when a message leaves
+- 3.2 The parsed message — `sip_msg` struct, **lazy** header parsing, the cost model
+- 3.3 Lumps — how mutations are *queued* rather than applied (this is the speed trick)
+- 3.4 The routing engine — `request_route`, `branch_route`, `failure_route`, `onreply_route`, `event_route`
+- 3.5 Forwarding and replies — assembling the outgoing message from buffer + lumps
 
 ### 4. The Script Engine
 - 4.1 The cfg DSL — why a custom language, what it optimises for
