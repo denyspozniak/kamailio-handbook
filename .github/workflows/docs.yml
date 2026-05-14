@@ -34,6 +34,14 @@ jobs:
         run: |
           cp docs/en/README.md docs/en/index.md
           cp docs/uk/README.md docs/uk/index.md
+
+          # Set the page title via YAML frontmatter — mkdocs can't extract it
+          # from the source <h1 align="center"> (that's raw HTML, not markdown).
+          # Without this, mkdocs falls back to the filename and labels both the
+          # nav entry and the in-page ToC header as "Index".
+          sed -i '1i---\ntitle: Kamailio Handbook — English\n---\n' docs/en/index.md
+          sed -i '1i---\ntitle: Kamailio Handbook — Українська\n---\n' docs/uk/index.md
+
           # Rewrite the in-README language-switcher path for the mkdocs site:
           # default locale is served at /kamailio-handbook/, the other at /kamailio-handbook/<lang>/.
           # The relative paths that work on GitHub (../uk/, ../en/) don't resolve correctly there.

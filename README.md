@@ -5,7 +5,7 @@
 </p>
 
 <p align="center">
-  <img alt="Kamailio" src="https://img.shields.io/badge/Kamailio-5.8.x-1f6feb?style=flat-square&logo=asterisk&logoColor=white">
+  <img alt="Kamailio" src="https://img.shields.io/badge/Kamailio-6.1.x-1f6feb?style=flat-square&logo=asterisk&logoColor=white">
   <img alt="Languages" src="https://img.shields.io/badge/docs-EN%20%7C%20UK-238636?style=flat-square">
   <a href="LICENSE"><img alt="License: MIT" src="https://img.shields.io/badge/license-MIT-6e7681?style=flat-square"></a>
   <a href="https://denyspozniak.github.io/kamailio-handbook/"><img alt="Docs site" src="https://img.shields.io/badge/site-MkDocs%20Material-1f6feb?style=flat-square&logo=materialformkdocs&logoColor=white"></a>

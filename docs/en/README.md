@@ -5,7 +5,7 @@
 </p>
 
 <p align="center">
-  <img alt="Kamailio" src="https://img.shields.io/badge/Kamailio-5.8.x-1f6feb?style=flat-square">
+  <img alt="Kamailio" src="https://img.shields.io/badge/Kamailio-6.1.x-1f6feb?style=flat-square">
   <img alt="Lang" src="https://img.shields.io/badge/lang-English-1f6feb?style=flat-square">
   <a href="../uk/README.md"><img alt="Switch to Ukrainian" src="https://img.shields.io/badge/switch_to-Українська-bf8700?style=flat-square"></a>
 </p>
