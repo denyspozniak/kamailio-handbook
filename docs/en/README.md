@@ -67,10 +67,7 @@ A single received SIP message walks through this pipeline. Most of what looks li
 - [3.5 Forwarding and replies](11-forwarding.md) — assembling the outgoing message from buffer + lumps ✅
 
 ### 4. The Script Engine
-- 4.1 The cfg DSL — why a custom language, what it optimises for
-- 4.2 Parsing, AST, execution — from `kamailio.cfg` to per-message bytecode
-- 4.3 Module-function dispatch — the C↔script FFI
-- 4.4 Pseudo-variables as an indirection layer — how `$var(x)`, `$avp(y)`, `$hdr(z)` actually work
+- [4. Script engine — pointer chapter](29-script-engine.md) — thin map of where the script-engine machinery is documented across other chapters, plus the few internals (AST shape, pseudo-variable dispatch, return-value convention) that didn't fit elsewhere ✅
 
 ### 5. KEMI — embedded scripting
 - [5.1 What problem KEMI solves](12-kemi-overview.md) — when the cfg DSL stops being enough ✅
@@ -96,8 +93,8 @@ A single received SIP message walks through this pipeline. Most of what looks li
 - [8.5 `dmq`](23-dmq.md) — distributed state sync between Kamailio instances ✅
 
 ### 9. Reference
-- 9.1 Process roles glossary
-- 9.2 Term map
+- [9.1 Process roles glossary](27-process-roles.md) — what each `ps`-visible process actually is ✅
+- [9.2 Term map](28-term-map.md) — quick glossary of Kamailio-specific terms ✅
 
 ---
 

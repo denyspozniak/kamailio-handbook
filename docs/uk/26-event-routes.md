@@ -114,5 +114,5 @@ event_route[dashboard_done] {
 ---
 
 <p align="center">
-  <a href="./">← Зміст</a> · <a href="25-kamcmd.md">← 7.2 kamcmd</a> · <em>Далі: 9. Reference (готується)</em>
+  <a href="./">← Зміст</a> · <a href="25-kamcmd.md">← 7.2 kamcmd</a> · <a href="27-process-roles.md">Далі: 9.1 Ролі процесів →</a>
 </p>
