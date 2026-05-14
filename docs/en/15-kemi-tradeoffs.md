@@ -99,5 +99,5 @@ The handbook moves next into state — how `tm` and `dialog` keep transactions a
 ---
 
 <p align="center">
-  <a href="./">← Table of contents</a> · <a href="14-kemi-lifecycle.md">← 5.3 KEMI lifecycle</a> · <em>Next: 6.1 Transactions (tm) — coming</em>
+  <a href="./">← Table of contents</a> · <a href="14-kemi-lifecycle.md">← 5.3 KEMI lifecycle</a> · <a href="16-tm-internals.md">Next: 6.1 Transactions (tm) →</a>
 </p>

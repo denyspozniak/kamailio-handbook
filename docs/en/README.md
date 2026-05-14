@@ -79,9 +79,9 @@ A single received SIP message walks through this pipeline. Most of what looks li
 - [5.4 Tradeoffs](15-kemi-tradeoffs.md) — when KEMI wins, when native cfg wins, the hybrid pattern ✅
 
 ### 6. State, Transactions, Dialogs
-- 6.1 Transactions (`tm`) — hash tables in shm, timer wheels, retransmission
-- 6.2 Dialogs — how `dialog` augments `tm` to track full calls
-- 6.3 In-memory caches with DB sync — the `usrloc` pattern
+- [6.1 Transactions (`tm`)](16-tm-internals.md) — hash tables in shm, timer wheels, retransmission ✅
+- [6.2 Dialogs](17-dialogs.md) — how `dialog` augments `tm` to track full calls ✅
+- [6.3 The `usrloc` pattern](18-usrloc.md) — in-memory cache, DB sync, generalised ✅
 
 ### 7. Control Plane
 - 7.1 RPC architecture — JSON-RPC, BINRPC, command exporters
