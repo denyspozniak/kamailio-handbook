@@ -39,7 +39,7 @@ jobs:
           cp docs/uk/README.md docs/uk/index.md
 
       - name: Build site
-        run: mkdocs build
+        run: mkdocs build --strict
 
       - uses: actions/configure-pages@v5
 
