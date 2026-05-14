@@ -28,10 +28,7 @@ jobs:
           cache: pip
 
       - name: Install MkDocs and plugins
-        run: |
-          pip install \
-            mkdocs-material \
-            mkdocs-static-i18n
+        run: pip install -r requirements.txt
 
       - name: Stage per-language index pages
         run: |
