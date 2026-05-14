@@ -84,9 +84,9 @@ flowchart LR
 - [6.3 Патерн `usrloc`](18-usrloc.md) — in-memory кеш, DB-sync, узагальнено ✅
 
 ### 7. Control plane
-- 7.1 Архітектура RPC — JSON-RPC, BINRPC, експорт команд
-- 7.2 `kamcmd` — важіль оператора
-- 7.3 Event routes — програмовані хуки в життєвий цикл рантайму
+- [7.1 Архітектура RPC](24-rpc-architecture.md) — BINRPC vs JSON-RPC, command registry, auth ✅
+- [7.2 `kamcmd`](25-kamcmd.md) — важіль оператора, п'ять команд для повсякдення ✅
+- [7.3 Event routes](26-event-routes.md) — програмовані хуки в життєвий цикл рантайму ✅
 
 ### 8. Архітектурні фішки
 - [8.1 Topology hiding (`topos`)](19-topos.md) — переписування виклику так, щоб топологія зникла ✅

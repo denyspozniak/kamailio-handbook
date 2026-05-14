@@ -84,9 +84,9 @@ A single received SIP message walks through this pipeline. Most of what looks li
 - [6.3 The `usrloc` pattern](18-usrloc.md) — in-memory cache, DB sync, generalised ✅
 
 ### 7. Control Plane
-- 7.1 RPC architecture — JSON-RPC, BINRPC, command exporters
-- 7.2 `kamcmd` — the operator's lever
-- 7.3 Event routes — programmable hooks into runtime lifecycle
+- [7.1 RPC architecture](24-rpc-architecture.md) — BINRPC vs JSON-RPC, the command registry, auth posture ✅
+- [7.2 `kamcmd`](25-kamcmd.md) — the operator's lever, the five commands you'll run constantly ✅
+- [7.3 Event routes](26-event-routes.md) — programmable hooks into runtime lifecycle ✅
 
 ### 8. Cool architectural tricks
 - [8.1 Topology hiding (`topos`)](19-topos.md) — rewriting calls so the topology vanishes ✅
