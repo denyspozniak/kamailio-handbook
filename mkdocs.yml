@@ -62,6 +62,9 @@ markdown_extensions:
   - toc:
       permalink: true
 
+hooks:
+  - hooks/edit_url.py
+
 plugins:
   - search
   - i18n:
