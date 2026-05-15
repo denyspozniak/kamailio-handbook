@@ -51,6 +51,7 @@ A single received SIP message walks through this pipeline. Most of what looks li
 
 ### 1. Preface
 - [1.1 Introduction](01-introduction.md) — signalling vs media, mental model, what to expect ✅
+- [1.2 SIP in 60 seconds](01b-sip-primer.md) — transactions, dialogs, positive/negative ACK, role of a proxy ✅
 
 ### 2. The Runtime
 - [2.1 Process model](02-process-model.md) — main, attendant, timer, workers — what each one is for ✅

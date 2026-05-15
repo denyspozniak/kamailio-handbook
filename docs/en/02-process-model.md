@@ -111,5 +111,5 @@ The next chapter takes apart the memory architecture that makes all this coopera
 ---
 
 <p markdown="1" align="center">
-  [← Table of contents](../) · [← 1.1 Introduction](01-introduction.md) · [Next: 2.2 Memory architecture →](03-memory-architecture.md)
+  [← Table of contents](../) · [← 1.2 SIP in 60 seconds](01b-sip-primer.md) · [Next: 2.2 Memory architecture →](03-memory-architecture.md)
 </p>

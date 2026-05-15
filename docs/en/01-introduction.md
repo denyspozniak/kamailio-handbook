@@ -88,5 +88,5 @@ The **routing script** is where the operator's intent lives. Everything else —
 ---
 
 <p markdown="1" align="center">
-  [← Table of contents](../) · [Next: 2.1 Process model →](02-process-model.md)
+  [← Table of contents](../) · [Next: 1.2 SIP in 60 seconds →](01b-sip-primer.md)
 </p>

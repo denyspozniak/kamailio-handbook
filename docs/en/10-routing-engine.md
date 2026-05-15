@@ -103,7 +103,35 @@ route[auth] {
 }
 ```
 
-`return` from a sub-route returns to the caller. `exit` from anywhere ends script processing for this message entirely. `drop` is `exit` plus a hint to `tm` that the transaction should be silently absorbed rather than answered.
+### `return`, `exit`, `drop` — control-flow exit primitives
+
+Three keywords that end script execution at different scopes, with different downstream side effects. They look interchangeable in trivial routes; in non-trivial ones they aren't.
+
+**`return [value]`** — returns from the current `route[name]` block to its caller. At the top level of `request_route`, equivalent to falling off the end. With a value, sets the result of the `route("name")` call expression:
+
+```kamailio
+route[is_local] {
+    if ($si =~ "^10\.") return 1;
+    return -1;
+}
+
+request_route {
+    if (route(is_local)) {
+        # only entered when is_local returned positive
+    }
+}
+```
+
+The tri-state convention applies (positive → true, negative → false, zero → drop the message — see [the cfg DSL chapter](29-script-engine.md)).
+
+**`exit`** — terminates script processing for this message **entirely**, immediately, regardless of nesting depth. The worker tears down the per-message pkg state and returns to its `recvfrom` loop. **No reply is generated automatically** — if your route was supposed to send one (`sl_send_reply`, `t_reply`, `t_relay`) and didn't before `exit`, the UAC sees nothing and will retransmit, then time out.
+
+**`drop`** — historically distinct from `exit`: a "silently absorb, generate nothing" signal that prevents `tm` from emitting an implicit reply. In modern Kamailio they often behave identically for top-level use; `drop` reads more clearly when the intent is "this message is filtered out, not relayed, not replied to."
+
+> [!WARNING]
+> `exit` *after* `t_relay()` is **safe**. `tm` has already put the transaction in shm; the worker is free to return to its loop. The transaction proceeds independently. Operators new to Kamailio sometimes worry that exiting will cancel the relay — it won't. `exit` only frees the per-message pkg arena (chapter 2.2).
+
+The fourth keyword in this family is **`break`**, which belongs to `switch/case` and `while` — not a route-exit primitive.
 
 ## How routes interact with lumps
 
