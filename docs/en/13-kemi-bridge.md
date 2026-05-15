@@ -104,6 +104,50 @@ end
 
 The above is Lua syntax; the Python and JS forms are identical except for method-call syntax (`KSR.tm.t_relay()` is the same in all three).
 
+## Return-value semantics — the inversion that bites
+
+In native cfg, the tri-state convention from chapter 4 applies: a function returning a positive int is **true** (continue), negative is **false** (skip the `if`-branch), zero is **drop**. The cfg parser interprets that sign into branching for you.
+
+KEMI does **not** do this translation. The C function's `int` return lands in your script as a plain integer, and your **script language's own truthiness rules apply** — and they disagree with cfg:
+
+- **Lua** — only `nil` and `false` are falsy. `-1`, `0`, every other value is **truthy**. So `if KSR.tm.t_relay() then` enters the branch whether the function returned `1` (success) or `-1` (failure).
+- **Python** — only `0`, `None`, empty containers are falsy. `-1` is **truthy**. Same trap.
+- **JavaScript** — `0` is falsy, every other number including `-1` is truthy.
+
+The practical consequence: a cfg pattern that works correctly does **not** translate literally to KEMI.
+
+```lua
+-- WRONG: -1 (failure) is truthy in Lua, branch is taken on failure too
+if KSR.tm.t_relay() then
+    KSR.info("relayed")
+end
+
+-- RIGHT: compare explicitly
+if KSR.tm.t_relay() > 0 then
+    KSR.info("relayed")
+end
+```
+
+```python
+# WRONG — same trap
+if KSR.tm.t_relay():
+    KSR.info("relayed")
+
+# RIGHT
+if KSR.tm.t_relay() > 0:
+    KSR.info("relayed")
+```
+
+The mirror trap is negation:
+
+- cfg: `if (!function())` — succeeds when the function returned non-positive (the cfg-style "false").
+- KEMI: `if not KSR.func() then` — succeeds **only** when the return was nil/false/0 in the host language. `-1` does **not** trigger this branch despite being a "failure" in cfg semantics.
+
+> [!WARNING]
+> This is one of the most common bugs when porting cfg routes to KEMI. A subtle `if (t_relay())` that works correctly in cfg becomes a route that always thinks `t_relay()` succeeded when translated literally to Lua or Python. **Test the failure paths.** Sign-compare every `KSR.*` return value as `> 0` unless the function's KSR documentation explicitly says it returns a native boolean (some bindings do — `KSR.is_method("INVITE")` returns `true`/`false` directly, not an int).
+
+The reason for the discrepancy is mechanical: the cfg DSL is a custom-built interpreter with its own truthiness rules baked into the parser. The KEMI bridge hands the raw int over the FFI; the script interpreter applies *its* rules. There's no shim trying to bridge the semantic gap — and historically several attempts to add one ran into edge cases (which int means drop in Lua? what about Python None?). Better to be explicit.
+
 ## Bidirectional dispatch — cfg ↔ script
 
 The bridge can go either way:
