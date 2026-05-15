@@ -111,5 +111,5 @@ for (;;) {
 ---
 
 <p markdown="1" align="center">
-  [← Зміст](../) · [← 1.1 Вступ](01-introduction.md) · [Далі: 2.2 Архітектура пам'яті →](03-memory-architecture.md)
+  [← Зміст](../) · [← 1.2 SIP за 60 секунд](01b-sip-primer.md) · [Далі: 2.2 Архітектура пам'яті →](03-memory-architecture.md)
 </p>
