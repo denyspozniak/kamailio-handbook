@@ -63,7 +63,7 @@ flowchart TD
 
 **`event_route[<event-name>]`** — runs in response to runtime events that are *not* tied to a message arriving on the wire. Common ones: `event_route[tm:branch-failure]` for branch-specific failure hooks, `event_route[xhttp:request]` for HTTP-over-SIP-socket requests, `event_route[dispatcher:dst-down]` when a gateway is marked dead. Each module exposes its own events.
 
-**`send_route`** — invoked right before any message goes onto the wire. Use sparingly; it runs on top of an already-built outbound message and can be expensive to do meaningful work in.
+**`onsend_route`** — invoked right before any message goes onto the wire. Use sparingly; it runs on top of an already-built outbound message and can be expensive to do meaningful work in.
 
 ## The cfg DSL — what it actually is
 
@@ -132,6 +132,50 @@ The tri-state convention applies (positive → true, negative → false, zero �
 > `exit` *after* `t_relay()` is **safe**. `tm` has already put the transaction in shm; the worker is free to return to its loop. The transaction proceeds independently. Operators new to Kamailio sometimes worry that exiting will cancel the relay — it won't. `exit` only frees the per-message pkg arena (chapter 2.2).
 
 The fourth keyword in this family is **`break`**, which belongs to `switch/case` and `while` — not a route-exit primitive.
+
+## What `exit` and `drop` mean in each route
+
+The previous section described `return`, `exit`, and `drop` as if they were interchangeable. They are — but only at top level of `request_route`. Every other kind of route has a "default continuation" the engine performs after the script returns (forward the reply, send the branch, propagate the failure, put the message on the wire), and the verbs prune that continuation differently.
+
+Mechanically, all four jump keywords (`exit`, `drop`, `return`, `break`) compile to a single opcode and differ only in which bit they OR into the action context's `run_flags`. The crucial split: **only `drop` sets `DROP_R_F`**. `exit` sets `EXIT_R_F` only — control flow, no suppression. `return 0` is auto-promoted to also set `EXIT_R_F`, but it does **not** set `DROP_R_F`. Each callee in the runtime checks its own subset of these bits.
+
+| Route block | `exit` | `drop` | `return 0` at top level |
+|---|---|---|---|
+| `request_route` | script ends, no auto-forward | same | same |
+| `reply_route` (core) | reply continues to `tm` matching | reply discarded, never reaches `tm` | discarded (engine also checks the int return) |
+| `onreply_route[N]` | reply still relayed upstream | reply suppressed (provisional only, by default) | reply still relayed |
+| `branch_route[N]` | branch is sent | branch cancelled, not sent | branch is sent |
+| `failure_route[N]` | engine ignores — failure propagates | engine ignores — failure propagates | engine ignores — failure propagates |
+| `event_route[…]` | usually no effect | event-specific; most ignore, some short-circuit | usually no effect |
+| `onsend_route` | message goes on the wire | suppresses the send | message still sent (engine promotes 0 → 1) |
+
+A few rows need explanation.
+
+**`onreply_route[N]` — `drop` is provisional-only by default.** The `tm` check is gated: it suppresses upstream relay only when the reply's status is `< 200`. Dropping a final reply would leave the transaction in a broken state — tm has already committed to relaying something. A compile-time flag (`TM_ONREPLY_FINAL_DROP_OK`) removes the gate, but stock builds don't enable it. Practical consequence: you can suppress 1xx provisionals (e.g., filter unwanted 183s) but you cannot drop the 200/4xx/5xx that finalises the call.
+
+**`branch_route[N]` — `return 0` is not `drop`.** The per-branch hook in `t_fwd.c` checks `DROP_R_F` only. `return 0` sets `EXIT_R_F` but not `DROP_R_F`, so a sub-route returning 0 — even though it feels like "stop" — does not cancel the branch. To actually cancel, use the literal `drop` keyword.
+
+**`failure_route[N]` is special — there is no suppression verb.** Look at how `tm` invokes it (`t_reply.c`):
+
+```c
+if(run_top_route(failure_rt.rlist[on_failure], faked_req, 0) < 0)
+    LM_ERR("...");
+```
+
+The third argument is `NULL` — tm never retrieves the action context. Neither `exit`, nor `drop`, nor `return 0` is visible to the failure-handling logic. Failure propagation is governed entirely by side effects the script runs *before* returning: `t_reply()` builds a different response, `t_drop_replies()` discards the stored negative replies, `append_branch()` + `t_relay()` re-forks to a new destination. If the script just `exit`s, tm propagates the best stored negative reply upstream as usual. The same `NULL`-ctx pattern applies to `event_route[tm:branch-failure]` (the branch-failure callback).
+
+> [!WARNING]
+> `exit` in `failure_route` does **not** absorb the failure. Operators sometimes add `exit` "to stop the failure" and find the UAC still gets the 4xx/5xx. The answer is that tm never asked the script's opinion — it's about to relay the negative reply unless you explicitly call `t_reply()` or `t_drop_replies()`.
+
+**`onsend_route` is the inverse trap.** The check in `core/onsend.c` is `DROP_R_F`-only — and the engine explicitly *promotes* a `run_actions()` return of 0 back to 1 before deciding. So both `exit` and `return 0` let the message go onto the wire; only literal `drop` actually suppresses the send.
+
+**`event_route[name]` is heterogeneous.** Most event-route call sites in core and modules pass `NULL` ctx — the script is fire-and-forget. A handful inspect `DROP_R_F`: `event_route[core:msg:received]` and `event_route[core:pre-routing]` use it to short-circuit further message handling at the wire level. Module-specific events vary; when in doubt, check the module's source for the `run_top_route` call site.
+
+### The same rules apply to KEMI
+
+`KSR.x.exit()` and `KSR.x.drop()` go through the same machinery as the cfg keywords — `KSR.x.exit()` sets `EXIT_R_F` only, `KSR.x.drop()` sets `DROP_R_F`. The per-route table above applies to KEMI scripts identically. The truthiness inversion described in [chapter 5.2](13-kemi-bridge.md) does not affect these — they are control-flow primitives, not predicates.
+
+Beyond that, host-language details vary by binding: in some hosts the unwind back to the KEMI dispatcher is via an exception that aborts the current frame, in others it sets state and the script keeps running until the function returns. The `return KSR.x.exit()` form seen in many examples is the portable idiom — it terminates the function at the language level regardless of how the host handles the cfg-side unwind.
 
 ## How routes interact with lumps
 
