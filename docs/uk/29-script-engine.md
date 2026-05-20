@@ -15,6 +15,7 @@
 | Псевдо-змінні і lazy-парсинг | [3.2 Розпарсене повідомлення](08-parsed-message.md) |
 | Lump-queuing як side-effect виконання скрипта | [3.3 Lumps](09-lumps.md) |
 | Sub-route'и і як працює `route()` | [3.4](10-routing-engine.md) |
+| Per-route-семантика `exit` / `drop` / `return 0` | [3.4](10-routing-engine.md) |
 | Bridge cfg до KEMI-скриптів | [5.2 KEMI bridge](13-kemi-bridge.md) |
 
 Якщо ви читали ті розділи — у вас є script engine. Решта цього розділу — деталі, що ніде не помістилися.
@@ -31,6 +32,14 @@
 Executor — це маленький інтерпретатор (~кілька сотень рядків), що обходить це дерево в рантаймі. Це не VM у JIT-сенсі — жодного байткоду, жодної компіляції в native. Прямий AST-walk із function-pointer-disptch'ем.
 
 Тому per-message script-overhead такий низький: немає «compile-once-then-execute»-непрямості. AST уже в оптимальній формі для інтерпретатора.
+
+## Як `exit`, `drop` і `return 0` сигналізуються
+
+Усі чотири script-level jump-ключові слова — `exit`, `drop`, `return`, `break` — компілюються в єдиний опкод (`DROP_T`) у executor'і. Різняться лише тим, який біт OR'ять у поле `run_flags` action-контексту: `EXIT_R_F`, `DROP_R_F`, `RETURN_R_F`, `BREAK_R_F` відповідно. `return 0` авто-промотується до додаткового `EXIT_R_F`. Головний loop executor'а (`run_actions` у `src/core/action.c`) читає лише `EXIT_R_F`/`RETURN_R_F`/`BREAK_R_F`, щоб вирішити, чи продовжувати walk-дерева — `DROP_R_F` executor не читає взагалі.
+
+Для чого `DROP_R_F`: це сигнал **для caller'а `run_top_route`**. Routing-движок — той шматок core чи `tm`, що викликав route-блок — отримує назад `run_act_ctx`, який передав, інспектує `ctx.run_flags & DROP_R_F` і вирішує, чи пропустити свою default-continuation (форвардити reply, відправити branch, поширити failure тощо). Саме тому `drop` має різні ефекти в різних route'ах: кожен caller перевіряє біт у власній точці прийняття рішення. Per-route-таблиця — у [3.4](10-routing-engine.md).
+
+Наслідок: route'и, викликані з `NULL` ctx — у першу чергу `failure_route` і `event_route[tm:branch-failure]` — не мають callable-місця, куди прийде біт. Скрипт усе ще може виконати `drop`, але прапор ніхто не читає. Подавлення у таких route'ах — через явні side-effect-виклики (`t_reply()`, `t_drop_replies()`, `append_branch` + `t_relay()`), зроблені до повернення зі скрипта.
 
 ## Псевдо-змінні як таблиця диспетчеризації
 

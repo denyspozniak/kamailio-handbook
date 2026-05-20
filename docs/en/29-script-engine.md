@@ -15,6 +15,7 @@
 | Pseudo-variables and lazy parsing | [3.2 The parsed message](08-parsed-message.md) |
 | Lump-queuing as the side effect of script execution | [3.3 Lumps](09-lumps.md) |
 | Sub-routes and how `route()` works | [3.4](10-routing-engine.md) |
+| Per-route semantics of `exit` / `drop` / `return 0` | [3.4](10-routing-engine.md) |
 | The cfg's bridge to KEMI scripts | [5.2 KEMI bridge](13-kemi-bridge.md) |
 
 If you've read those chapters, you have the script engine. The rest of this chapter is the few details that didn't fit anywhere else.
@@ -31,6 +32,14 @@ After cfg parsing, each route block is an array of `cfg_action_t` structures. Ea
 The executor is a small interpreter (~few hundred lines) that walks this tree at runtime. It's not a virtual machine in the JIT sense — there's no bytecode, no compilation to native code. Just a direct AST walk with function-pointer dispatch.
 
 This is why per-message script overhead is so low: there's no "compile-once-then-execute" indirection. The AST is already in the optimal form for the interpreter.
+
+## How `exit`, `drop`, and `return 0` are signalled
+
+All four script-level jump keywords — `exit`, `drop`, `return`, `break` — compile to a single opcode (`DROP_T`) in the executor. They differ only in which bit is OR-ed into the action context's `run_flags` field: `EXIT_R_F`, `DROP_R_F`, `RETURN_R_F`, `BREAK_R_F` respectively. `return 0` is auto-promoted to also set `EXIT_R_F`. The executor's main loop (`run_actions` in `src/core/action.c`) reads only `EXIT_R_F`/`RETURN_R_F`/`BREAK_R_F` to decide whether to keep walking the tree — `DROP_R_F` is never read by the executor.
+
+What `DROP_R_F` is for: it's a signal **for the caller of `run_top_route`**. The routing engine — whichever piece of core or `tm` invoked the route block — gets back the `run_act_ctx` it passed in, inspects `ctx.run_flags & DROP_R_F`, and decides whether to skip its default continuation (forward the reply, send the branch, propagate the failure, etc.). This is why `drop` has different effects in different routes: each caller checks the bit at its own decision point. See [3.4](10-routing-engine.md) for the per-route table.
+
+A corollary: routes called with `NULL` ctx — most notably `failure_route` and `event_route[tm:branch-failure]` — have no callable place to receive the bit. The script can still execute `drop`, but nobody reads the flag. Suppression in those routes happens through explicit side-effect calls (`t_reply()`, `t_drop_replies()`, `append_branch` + `t_relay()`) made before the script returns.
 
 ## Pseudo-variables as a dispatch table
 
