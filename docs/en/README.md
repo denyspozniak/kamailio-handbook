@@ -16,6 +16,7 @@
 > This handbook is **deliberately not a re-telling of the official docs**. It assumes you already know what Kamailio is at a surface level and instead drills into the runtime, the message lifecycle, the script engine, KEMI, and the architectural tricks that make Kamailio behave the way it does. There is no module-by-module reference here.
 
 **Sources used:**
+
 - [asipto/kamailio-devel-guide](https://github.com/asipto/kamailio-devel-guide) — internals reference by the original maintainer; goes deep on data lumps, parser, memory, locking, RPC.
 - [kamailio.org/wikidocs](https://www.kamailio.org/wikidocs/) — for background and the surface-level API.
 - [github.com/kamailio/kamailio](https://github.com/kamailio/kamailio) — actual implementation in C, the final source of truth.
