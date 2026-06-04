@@ -104,5 +104,5 @@ Mailing list `sr-dev@lists.kamailio.org` несе design-дискусії до �
 ---
 
 <p markdown="1" align="center">
-  [← Зміст](../) · [← 9.2 Карта термінів](28-term-map.md)
+  [← Зміст](../) · [← 9.2 Карта термінів](28-term-map.md) · [Далі: 10.1 Що таке IMS →](31-ims-overview.md)
 </p>

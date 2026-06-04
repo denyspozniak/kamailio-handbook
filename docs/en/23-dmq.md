@@ -152,7 +152,7 @@ That turns `dmq` from "modules quietly sync their own state" into a replication 
 
 `dmq` is the architectural piece that turns Kamailio from "a powerful single-box SIP server" into "a scale-out SIP platform." Every other piece you've read about — process model, shm, lumps, transactions, dialogs, KEMI, topos, async, htable, dispatcher — exists at the scale of one instance. `dmq` is the seam that lets you operate many of those instances as if they were one. None of them designed for distribution from the start; `dmq` adds it as an opt-in retrofit, which is honest and which works.
 
-The final part of the handbook is the reference material — process role glossary and a term map.
+What follows is the reference material (process-role glossary, term map, what's new) and Part 10 — running Kamailio in IMS.
 
 ---
 

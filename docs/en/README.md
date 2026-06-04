@@ -19,6 +19,7 @@
 - [asipto/kamailio-devel-guide](https://github.com/asipto/kamailio-devel-guide) — internals reference by the original maintainer; goes deep on data lumps, parser, memory, locking, RPC.
 - [kamailio.org/wikidocs](https://www.kamailio.org/wikidocs/) — for background and the surface-level API.
 - [github.com/kamailio/kamailio](https://github.com/kamailio/kamailio) — actual implementation in C, the final source of truth.
+- For **Part 10 (IMS)**: [lyatanski/ims](https://github.com/lyatanski/ims) — a cloud-native software IMS lab (Compose + Helm); [anabelen-garcia/IMS-Kamailio-Tutorial](https://github.com/anabelen-garcia/IMS-Kamailio-Tutorial) — a single-VM academic Kamailio+FHoSS tutorial (UPM); and the upstream [Open5GS "VoLTE Setup with Kamailio IMS"](https://open5gs.org/open5gs/docs/tutorial/02-VoLTE-setup/) tutorial both descend from.
 
 ## How a SIP request flows through Kamailio
 
@@ -97,6 +98,13 @@ A single received SIP message walks through this pipeline. Most of what looks li
 - [9.1 Process roles glossary](27-process-roles.md) — what each `ps`-visible process actually is ✅
 - [9.2 Term map](28-term-map.md) — quick glossary of Kamailio-specific terms ✅
 - [9.3 What's new and what's in development](30-whats-new.md) — version landscape (5.8 → 6.0 → 6.1), new modules, archived modules, where to follow devel ✅
+
+### 10. Kamailio in IMS
+- [10.1 What IMS is and where Kamailio fits](31-ims-overview.md) — 3GPP framing, CSCF roles, the reference-point model (Gm/Mw/Cx/Rx/Ro/ISC) ✅
+- [10.2 The CSCF roles on Kamailio](32-ims-cscf.md) — P/I/S-CSCF, the `ims_*` modules, the two-pass registration flow, where state lives ✅
+- [10.3 The Diameter side](33-ims-diameter.md) — `cdp`/`cdp_avp`, Cx/Rx/Ro, the peer state machine, async-in-the-worker ✅
+- [10.4 What you still need around Kamailio](34-ims-full-solution.md) — HSS, PCRF, OCS, DRA, rtpengine, DNS, core — the honest scope line ✅
+- [10.5 A worked reference — a software IMS lab](35-ims-lab.md) — the `lyatanski/ims` stack and a single-VM academic tutorial ✅
 
 ---
 

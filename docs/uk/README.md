@@ -19,6 +19,7 @@
 - [asipto/kamailio-devel-guide](https://github.com/asipto/kamailio-devel-guide) — посібник з внутрішнього устрою від оригінального мейнтейнера; глибоко про data lumps, парсер, пам'ять, локи, RPC.
 - [kamailio.org/wikidocs](https://www.kamailio.org/wikidocs/) — фонова інформація та поверхневе API.
 - [github.com/kamailio/kamailio](https://github.com/kamailio/kamailio) — реальна імплементація в C, фінальне джерело істини.
+- Для **Part 10 (IMS)**: [lyatanski/ims](https://github.com/lyatanski/ims) — cloud-native софтовий IMS-стенд (Compose + Helm); [anabelen-garcia/IMS-Kamailio-Tutorial](https://github.com/anabelen-garcia/IMS-Kamailio-Tutorial) — академічний single-VM-туторіал Kamailio+FHoSS (UPM); і upstream-туторіал [Open5GS «VoLTE Setup with Kamailio IMS»](https://open5gs.org/open5gs/docs/tutorial/02-VoLTE-setup/), від якого обидва походять.
 
 ## Як SIP-запит проходить через Kamailio
 
@@ -97,6 +98,13 @@ flowchart LR
 - [9.1 Глосарій ролей процесів](27-process-roles.md) — хто є хто в `ps`-виводі ✅
 - [9.2 Карта термінів](28-term-map.md) — швидкий глосарій Kamailio-specific ✅
 - [9.3 Що нового і що в розробці](30-whats-new.md) — версійний ландшафт (5.8 → 6.0 → 6.1), нові модулі, заархівовані, де стежити за devel ✅
+
+### 10. Kamailio в IMS
+- [10.1 Що таке IMS і де тут Kamailio](31-ims-overview.md) — 3GPP-фреймінг, ролі CSCF, модель reference-points (Gm/Mw/Cx/Rx/Ro/ISC) ✅
+- [10.2 Ролі CSCF на Kamailio](32-ims-cscf.md) — P/I/S-CSCF, модулі `ims_*`, двопрохідний flow реєстрації, де живе стан ✅
+- [10.3 Сторона Diameter](33-ims-diameter.md) — `cdp`/`cdp_avp`, Cx/Rx/Ro, peer state machine, async-у-воркері ✅
+- [10.4 Що ще треба навколо Kamailio](34-ims-full-solution.md) — HSS, PCRF, OCS, DRA, rtpengine, DNS, ядро — чесна межа ✅
+- [10.5 Робочий референс — софтовий IMS-стенд](35-ims-lab.md) — стек `lyatanski/ims` і академічний single-VM-туторіал ✅
 
 ---
 

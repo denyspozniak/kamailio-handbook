@@ -152,7 +152,7 @@ dmq_process_custom("$peer", "$node_uri", "$body", "$content_type")
 
 `dmq` — архітектурна частина, що перетворює Kamailio з «потужний single-box SIP-сервер» на «scale-out SIP-платформу». Кожна інша частина, про яку ви читали — process model, shm, lumps, transactions, dialogs, KEMI, topos, async, htable, dispatcher — існує на масштабі одного інстансу. `dmq` — шов, що дозволяє оперувати багатьма з них так, ніби це один. Жодна з них не дизайнилася під distribution зі старту; `dmq` додає це як opt-in retrofit, що чесно і працює.
 
-Фінальна частина посібника — reference-матеріал: глосарій ролей процесів і карта термінів.
+Далі — reference-матеріал (глосарій ролей процесів, карта термінів, що нового) і Part 10 — Kamailio в IMS.
 
 ---
 

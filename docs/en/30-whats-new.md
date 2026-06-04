@@ -104,5 +104,5 @@ If you encounter behaviour that contradicts the handbook on a current version, *
 ---
 
 <p markdown="1" align="center">
-  [← Table of contents](../) · [← 9.2 Term map](28-term-map.md)
+  [← Table of contents](../) · [← 9.2 Term map](28-term-map.md) · [Next: 10.1 What IMS is →](31-ims-overview.md)
 </p>
