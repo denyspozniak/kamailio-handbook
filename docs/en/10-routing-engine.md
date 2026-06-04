@@ -137,7 +137,7 @@ The fourth keyword in this family is **`break`**, which belongs to `switch/case`
 
 The previous section described `return`, `exit`, and `drop` as if they were interchangeable. They are — but only at top level of `request_route`. Every other kind of route has a "default continuation" the engine performs after the script returns (forward the reply, send the branch, propagate the failure, put the message on the wire), and the verbs prune that continuation differently.
 
-Mechanically, all four jump keywords (`exit`, `drop`, `return`, `break`) compile to a single opcode and differ only in which bit they OR into the action context's `run_flags`. The crucial split: **only `drop` sets `DROP_R_F`**. `exit` sets `EXIT_R_F` only — control flow, no suppression. `return 0` is auto-promoted to also set `EXIT_R_F`, but it does **not** set `DROP_R_F`. Each callee in the runtime checks its own subset of these bits.
+Mechanically, all four jump keywords (`exit`, `drop`, `return`, `break`) compile to a single opcode and differ only in which bit they OR into the action context's `run_flags`. The crucial split: **only `drop` sets `DROP_R_F`**. `exit` sets `EXIT_R_F` only — control flow, no suppression. `return 0` is auto-promoted to also set `EXIT_R_F`, but it does **not** set `DROP_R_F`. Each caller in the runtime checks its own subset of these bits.
 
 | Route block | `exit` | `drop` | `return 0` at top level |
 |---|---|---|---|
