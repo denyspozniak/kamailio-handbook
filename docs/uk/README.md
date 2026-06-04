@@ -19,7 +19,10 @@
 - [asipto/kamailio-devel-guide](https://github.com/asipto/kamailio-devel-guide) — посібник з внутрішнього устрою від оригінального мейнтейнера; глибоко про data lumps, парсер, пам'ять, локи, RPC.
 - [kamailio.org/wikidocs](https://www.kamailio.org/wikidocs/) — фонова інформація та поверхневе API.
 - [github.com/kamailio/kamailio](https://github.com/kamailio/kamailio) — реальна імплементація в C, фінальне джерело істини.
-- Для **Part 10 (IMS)**: [lyatanski/ims](https://github.com/lyatanski/ims) — cloud-native софтовий IMS-стенд (Compose + Helm); [anabelen-garcia/IMS-Kamailio-Tutorial](https://github.com/anabelen-garcia/IMS-Kamailio-Tutorial) — академічний single-VM-туторіал Kamailio+FHoSS (UPM); і upstream-туторіал [Open5GS «VoLTE Setup with Kamailio IMS»](https://open5gs.org/open5gs/docs/tutorial/02-VoLTE-setup/), від якого обидва походять.
+- Для **Part 10 (IMS)**:
+    - [lyatanski/ims](https://github.com/lyatanski/ims) — cloud-native софтовий IMS-стенд (Compose + Helm).
+    - [anabelen-garcia/IMS-Kamailio-Tutorial](https://github.com/anabelen-garcia/IMS-Kamailio-Tutorial) — академічний single-VM-туторіал Kamailio+FHoSS (UPM).
+    - [Open5GS «VoLTE Setup with Kamailio IMS»](https://open5gs.org/open5gs/docs/tutorial/02-VoLTE-setup/) — upstream-туторіал, від якого обидва походять.
 
 ## Як SIP-запит проходить через Kamailio
 

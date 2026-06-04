@@ -19,7 +19,10 @@
 - [asipto/kamailio-devel-guide](https://github.com/asipto/kamailio-devel-guide) — internals reference by the original maintainer; goes deep on data lumps, parser, memory, locking, RPC.
 - [kamailio.org/wikidocs](https://www.kamailio.org/wikidocs/) — for background and the surface-level API.
 - [github.com/kamailio/kamailio](https://github.com/kamailio/kamailio) — actual implementation in C, the final source of truth.
-- For **Part 10 (IMS)**: [lyatanski/ims](https://github.com/lyatanski/ims) — a cloud-native software IMS lab (Compose + Helm); [anabelen-garcia/IMS-Kamailio-Tutorial](https://github.com/anabelen-garcia/IMS-Kamailio-Tutorial) — a single-VM academic Kamailio+FHoSS tutorial (UPM); and the upstream [Open5GS "VoLTE Setup with Kamailio IMS"](https://open5gs.org/open5gs/docs/tutorial/02-VoLTE-setup/) tutorial both descend from.
+- For **Part 10 (IMS)**:
+    - [lyatanski/ims](https://github.com/lyatanski/ims) — a cloud-native software IMS lab (Compose + Helm).
+    - [anabelen-garcia/IMS-Kamailio-Tutorial](https://github.com/anabelen-garcia/IMS-Kamailio-Tutorial) — a single-VM academic Kamailio+FHoSS tutorial (UPM).
+    - [Open5GS "VoLTE Setup with Kamailio IMS"](https://open5gs.org/open5gs/docs/tutorial/02-VoLTE-setup/) — the upstream tutorial both descend from.
 
 ## How a SIP request flows through Kamailio
 

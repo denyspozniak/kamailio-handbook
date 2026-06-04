@@ -92,7 +92,7 @@ sequenceDiagram
 
 ## Де живе стан
 
-IMS-ідентичності бувають двох ґатунків, і S-CSCF ключує стан на обидва:
+IMS-ідентичності бувають двох ґатунків, і S-CSCF індексує стан за обома:
 
 - **IMPI** — IP Multimedia *Private* Identity: credential-ідентичність (одна на підписку, для auth). Думайте «SIM».
 - **IMPU** — IP Multimedia *Public* Identity: дзвонибельна ідентичність (`sip:` / `tel:` URI). Підписка може мати кілька.
