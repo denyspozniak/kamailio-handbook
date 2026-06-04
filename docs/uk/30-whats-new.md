@@ -89,7 +89,7 @@ Mailing list `sr-dev@lists.kamailio.org` несе design-дискусії до �
 - **Lumps** (3.3) — data-lump-машинерія стабільна 15+ років. Source-файли все ще `data_lump.{c,h}`.
 - **KEMI** (5) — `KSR.*`-API forward-compatible; нові біндинги додаються per-release без видалення старих.
 - **Routing engine** (3.4) — `reply_route` і `onreply_route` обидва існують у кожній сучасній версії; перелік подій для `event_route[…]` зростає з кожним релізом, як модулі додають хуки.
-- **`htable`, `dispatcher`, `dmq`** (8) — feature-surface зростає; описані архітектурні патерни без змін.
+- **`htable`, `dispatcher`, `dmq`** (8) — feature-surface зростає; описані архітектурні патерни без змін. Master-лінія додає операційні `dmq`-knob'и (`sl_send`, `init_with_single`, RPC-керування membership'ом, `dmq_process_custom()`) — див. [8.5 dmq](23-dmq.md#новіші-knobи-про-які-варто-знати).
 
 Якщо ви побачили поведінку, що суперечить посібнику на актуальній версії — **репо виграє**: посібник — best-effort, але C-код — авторитетний.
 

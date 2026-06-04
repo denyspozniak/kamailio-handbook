@@ -112,6 +112,42 @@ kamcmd dmq.process         # trigger one round of message processing manually
 
 `dmq.list_nodes` is the operational equivalent of "is the cluster healthy?" — it shows each peer's known state (`up`, `pending`, `disabled`) and the time of last contact. A peer that's been silent for too long is the first sign of a propagation problem.
 
+## Newer knobs worth knowing
+
+`dmq` is an old module, but it's still actively extended — a batch of changes that landed in the master line (Kamailio 6.x development) makes it cheaper to run and more controllable from the outside. If you're on a recent build, these are the ones that matter.
+
+**`sl_send` — stateless replication sends.** By default every `dmq` message goes out *statefully*: a `tm` transaction per send, so the sender can match the reply. On TCP transport between nodes, at REGISTER-heavy CPS, that transaction churn is pure overhead — most replication messages don't need a reply. Setting `modparam("dmq", "sl_send", 1)` switches to stateless sending; only messages with a real reply callback (the `notification_peer` membership traffic) stay stateful. Cheap win on busy clusters.
+
+```c
+modparam("dmq", "sl_send", 1)
+```
+
+**`init_with_single` — fast startup sync.** At boot a node normally pulls state from *every* peer in its list at once. In a large cluster that's a thundering herd against a freshly-started node. `modparam("dmq", "init_with_single", 1)` makes it sync from a **single** peer — the first one that answers a ping — and trust the mesh to even things out afterward. Faster, lighter restarts.
+
+```c
+modparam("dmq", "init_with_single", 1)
+```
+
+**RPC membership control — `dmq.add` and `dmq.change_status`.** Membership used to be driven almost entirely from config (the notification address) and internal probing. Two RPCs now let you orchestrate the cluster from the outside:
+
+```bash
+kamcmd dmq.add sip:10.0.0.7:5060        # add a node to this node's list
+kamcmd dmq.change_status sip:10.0.0.7:5060 1   # flip an existing node's status
+```
+
+This is what you want when node membership comes from a deploy script or an autoscaler rather than a static config — bring a node up, register it with the cluster via RPC, no reload.
+
+**`dmq_process_custom()` — `dmq` as a programmable bus.** Until recently, only a C module could handle an incoming `dmq` message. The new config function lets a script hand an arbitrary payload directly to a local peer:
+
+```c
+dmq_process_custom("$peer", "$node_uri", "$body", "$content_type")
+```
+
+That turns `dmq` from "modules quietly sync their own state" into a replication bus *you* can drive from the routing script — ship your own data between nodes, not just what a module author anticipated. Niche, but it's the difference between extending `dmq` and forking it.
+
+> [!NOTE]
+> These shipped through the master line and are the kind of operational polish you get from people running large `dmq` clusters in anger (net2phone's Vlad Litvinov authored most of this batch). Check your module version before relying on any of them — `kamcmd core.version` and the module README.
+
 ## Why this is the right closer for the tricks chapter
 
 `dmq` is the architectural piece that turns Kamailio from "a powerful single-box SIP server" into "a scale-out SIP platform." Every other piece you've read about — process model, shm, lumps, transactions, dialogs, KEMI, topos, async, htable, dispatcher — exists at the scale of one instance. `dmq` is the seam that lets you operate many of those instances as if they were one. None of them designed for distribution from the start; `dmq` adds it as an opt-in retrofit, which is honest and which works.

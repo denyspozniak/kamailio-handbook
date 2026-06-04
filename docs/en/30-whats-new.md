@@ -89,7 +89,7 @@ This handbook targets Kamailio 6.1.x and the architectural concepts are stable a
 - **Lumps** (chapter 3.3) — the data-lump machinery has been stable for 15+ years. Source files still `data_lump.{c,h}`.
 - **KEMI** (chapter 5) — the `KSR.*` API is forward-compatible; new bindings get added per-release without removing old ones.
 - **Routing engine** (chapter 3.4) — `reply_route` and `onreply_route` both exist in every modern version; the available events for `event_route[…]` grow with each release as modules add hooks.
-- **`htable`, `dispatcher`, `dmq`** (chapter 8) — feature surface grows; the architectural patterns described are unchanged.
+- **`htable`, `dispatcher`, `dmq`** (chapter 8) — feature surface grows; the architectural patterns described are unchanged. The master line adds operational `dmq` knobs (`sl_send`, `init_with_single`, RPC membership control, `dmq_process_custom()`) — see [8.5 dmq](23-dmq.md#newer-knobs-worth-knowing).
 
 If you encounter behaviour that contradicts the handbook on a current version, **the source repo wins** — the handbook is best-effort but the C code is authoritative.
 
