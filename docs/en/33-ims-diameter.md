@@ -1,11 +1,11 @@
 # 10.3 The Diameter side
 
 > [!IMPORTANT]
-> SIP carries the call. **Diameter** carries everything the call *depends on* — who the subscriber is, whether they're allowed, what QoS their media gets, and what it costs. A CSCF that can't speak Diameter is a proxy that can register nobody and authorise nothing. So alongside its SIP stack, Kamailio runs a full Diameter peer — and understanding that peer is half of understanding Kamailio-in-IMS.
+> SIP carries the call; **Diameter** carries what the call depends on — subscriber identity, authorisation, media QoS, charging. The CSCF can register and authorise nobody without it, so Kamailio runs a full Diameter peer alongside its SIP stack.
 
-## Why IMS needs a second protocol at all
+## Why Diameter
 
-SIP is a session protocol; it has no business knowing your subscription tier, your authentication vectors, or your prepaid balance. 3GPP put all of that on **Diameter** (RFC 6733), an AAA protocol with a request/answer command model, structured **AVPs** (Attribute-Value Pairs), and persistent peer connections. Every Diameter link in IMS is one of the reference points from [10.1](31-ims-overview.md): Cx to the HSS, Rx to the PCRF, Ro/Rf to the charging system.
+SIP is a session protocol; it doesn't carry subscription, authentication, or charging data. 3GPP put that on **Diameter** (RFC 6733) — an AAA protocol with a request/answer command model, structured **AVPs** (Attribute-Value Pairs), and persistent peer connections. Each Diameter link in IMS is a reference point from [10.1](31-ims-overview.md): Cx to the HSS, Rx to the PCRF, Ro/Rf to charging.
 
 ## `cdp` — the C Diameter Peer
 
@@ -52,9 +52,9 @@ Rx (PCRF), Ro (OCS):
 
 ## What kills you
 
-- **Peer flapping.** If the HSS/DRA connection drops, `cdp` tears down and retries — and during that window every REGISTER fails (no MAA). Watch the CER/DWR state; a peer that's silent on watchdogs is about to take your registrations down with it.
-- **AVP dictionary mismatch.** `cdp` only understands the AVPs in its loaded dictionaries. A peer (HSS/PCRF) that sends a vendor-specific AVP `cdp` doesn't know about gets that AVP dropped or the message rejected — and the failure surfaces as a confusing SIP-side error far from the real cause.
-- **Blocking the worker.** If the async wiring is wrong and a module makes a *synchronous* Diameter call, one slow HSS response parks a SIP worker for the whole timeout. At registration storms this cascades fast. The whole point of the suspend/continue machinery is to avoid exactly this.
+- **Peer flapping.** If the HSS/DRA connection drops, `cdp` tears it down and retries; during that window every REGISTER fails (no MAA). A peer silent on DWR watchdogs will drop registrations — alert on CER/DWR state.
+- **AVP dictionary mismatch.** `cdp` only understands the AVPs in its loaded dictionaries. A vendor-specific AVP the dictionary lacks is dropped or rejects the message, surfacing as a SIP-side error far from the cause.
+- **Blocking the worker.** A *synchronous* Diameter call (async wiring wrong) parks a SIP worker for the whole HSS timeout; at registration storms this cascades. The suspend/continue machinery exists to prevent it.
 
 ---
 

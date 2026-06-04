@@ -1,14 +1,14 @@
 # 10.5 A worked reference — a software IMS lab
 
 > [!IMPORTANT]
-> Diagrams only go so far. The fastest way to *get* IMS is to stand up a complete one on a laptop and watch the packets. The [**`lyatanski/ims`**](https://github.com/lyatanski/ims) project is exactly that: an entirely software-based IMS playground — Kamailio CSCF plus a full supporting cast — wired together with Docker Compose and Helm. This chapter reads it as a learning artifact: what's in it, how the pieces map to everything in this part, and why it's a good place to start.
+> The [**`lyatanski/ims`**](https://github.com/lyatanski/ims) project is a complete, entirely software-based IMS — Kamailio CSCF plus the full supporting cast — wired together with Docker Compose and Helm, runnable on one machine. This chapter maps its components onto the rest of this part.
 
 > [!NOTE]
 > `lyatanski/ims` is a third-party, MIT-spirited lab maintained independently of this handbook. Treat it as a teaching/testing reference, not a production blueprint — and check the repo for current state, since it's actively developed.
 
 ## What it is
 
-A reproducible, all-open-source IMS core you can bring up with one `docker compose` command (and redeploy on Kubernetes via the bundled Helm charts). Its stated goals are telling: *a software-only playground for testing*, *documenting the open-source component configuration*, and *a clean Compose-based solution* that also ships **Helm charts** for Kubernetes. It targets VoLTE/5G flows and tracks the real 3GPP specs (TS 23.228, 24.229, the Cx 29.228/229, Rx 29.214, charging 32.299).
+A reproducible, all-open-source IMS core brought up with one `docker compose` command, or redeployed on Kubernetes via the bundled Helm charts. It targets VoLTE/5G flows and tracks the 3GPP specs (TS 23.228, 24.229, Cx 29.228/229, Rx 29.214, charging 32.299).
 
 ## The components, mapped to this part
 
@@ -49,7 +49,7 @@ flowchart LR
 
 ## How Kamailio is set up inside it
 
-The interesting part for this handbook is the CSCF configuration. The lab keeps the three roles as separate Kamailio configs sharing a common base:
+The lab keeps the three CSCF roles as separate Kamailio configs sharing a common base:
 
 - `common.cfg` — shared module loads and defaults
 - `proxy.cfg` — the **P-CSCF**
@@ -67,7 +67,7 @@ ims_isc        ims_qos            ims_charging
 ims_dialog     rtpengine          db_redis
 ```
 
-plus the usual workhorses (`tm`, `rr`, `sl`, `sanity`, `siputils`, `textops`, `pv`, `presence`/`pua` for the reg-event subscription, and `xhttp_prom` for Prometheus metrics). Seeing them loaded together, in role-specific files, is the clearest possible confirmation of the role→module map from [10.2](32-ims-cscf.md).
+plus the usual workhorses (`tm`, `rr`, `sl`, `sanity`, `siputils`, `textops`, `pv`, `presence`/`pua` for the reg-event subscription, and `xhttp_prom` for Prometheus metrics). Loaded together in role-specific files, they are the role→module map from [10.2](32-ims-cscf.md) in concrete form.
 
 ## What to do with it
 
@@ -81,16 +81,14 @@ Following that one exchange on the wire maps the whole part onto real packets.
 
 ## Another angle — a single-VM academic lab
 
-The cloud-native compose/Helm stack above is one end of the spectrum. The other end — and an excellent first contact with IMS — is a deliberately minimal, teaching-oriented setup: the UPM **[IMS-Kamailio-Tutorial](https://github.com/anabelen-garcia/IMS-Kamailio-Tutorial)** by Ana Belén García Hernando (Universidad Politécnica de Madrid). It builds a full IMS on a **single VM**, optimised not for realism but for *seeing the flows clearly in Wireshark*.
+A contrasting, teaching-oriented setup is the UPM **[IMS-Kamailio-Tutorial](https://github.com/anabelen-garcia/IMS-Kamailio-Tutorial)** by Ana Belén García Hernando (Universidad Politécnica de Madrid): a full IMS on a **single VM**, optimised for clear Wireshark flows rather than realism.
 
-What's instructive about it:
+- **All three CSCF roles are Kamailio.** P-CSCF (`:5060`), S-CSCF (`:6060`) and I-CSCF (`:4060`) run as three separate Kamailio processes on one host (the [herlesupreeth fork](https://github.com/herlesupreeth/kamailio) with its `Kamailio_IMS_Config` templates) — one binary covering the whole CSCF layer. Each role keeps its own `kamailio_*.cfg`, `*.xml` (the `cdp` Diameter peer config), and a defines file.
+- **A different component cast.** Kamailio with **FHoSS** (the FOKUS Java HSS from the OpenIMSCore lineage) instead of open5gs, **bind9** for DNS, **PJSUA** as the test UA — a contrast to [10.4](34-ims-full-solution.md)'s choices: the roles matter more than the products.
+- **Pure IMS, no EPC.** No packet core, so **no Rx interface** and no bearer setup — the SIP+Cx core of IMS in isolation.
+- **Capture-first.** Each function gets its own `127.0.0.X` loopback; cgroups + iptables SNAT + nflog give a single capture with correctly-addressed, causally-ordered traces.
 
-- **All three CSCF roles are Kamailio.** P-CSCF (`:5060`), S-CSCF (`:6060`) and I-CSCF (`:4060`) run as three separate Kamailio processes on one host — the clearest possible demonstration that a single piece of software (Kamailio, here the [herlesupreeth fork](https://github.com/herlesupreeth/kamailio) with its `Kamailio_IMS_Config` templates) covers the entire CSCF layer. Each role keeps its own `kamailio_*.cfg` (the cfg), `*.xml` (the `cdp` Diameter peer config), and a defines file.
-- **A different component cast.** It pairs Kamailio with **FHoSS** (the FOKUS Java HSS from the OpenIMSCore lineage) instead of open5gs, **bind9** for DNS, and **PJSUA** as the test UA — a useful contrast to [10.4](34-ims-full-solution.md)'s choices, showing the roles matter more than the specific products.
-- **Pure IMS, no EPC.** It deliberately drops the packet core, so there's **no Rx interface** and no bearer setup — a clean way to study the SIP+Cx core of IMS in isolation before adding VoLTE complexity.
-- **Capture-first engineering.** Each function gets its own `127.0.0.X` loopback, and the lab uses cgroups + iptables SNAT + nflog so a single capture shows correctly-addressed, causally-ordered traces. That plumbing is itself a small masterclass in observing a multi-process system.
-
-Both labs ultimately trace back to the canonical upstream walk-through, Sukchan Lee's **[Open5GS "VoLTE Setup with Kamailio IMS and Open5GS"](https://open5gs.org/open5gs/docs/tutorial/02-VoLTE-setup/)** — worth reading on its own as the reference recipe most Kamailio-IMS setups descend from.
+Both labs descend from the upstream recipe, Sukchan Lee's **[Open5GS "VoLTE Setup with Kamailio IMS and Open5GS"](https://open5gs.org/open5gs/docs/tutorial/02-VoLTE-setup/)**.
 
 ## Summary
 

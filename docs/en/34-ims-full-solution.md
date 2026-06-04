@@ -1,9 +1,9 @@
 # 10.4 What you still need around Kamailio
 
 > [!IMPORTANT]
-> Be honest about the boundary: **Kamailio is the CSCF signalling plane, and nothing else.** It registers users, routes SIP, and speaks Diameter to ask other systems for answers. It does not store subscribers, it does not decide policy, it does not rate calls, and it never touches a single RTP packet. A working IMS is Kamailio *plus* a ring of other systems — and knowing what those are is the difference between "I configured a CSCF" and "I have a phone network."
+> **Kamailio is the CSCF signalling plane, and nothing else.** It registers users, routes SIP, and queries Diameter peers. It does not store subscribers, decide policy, rate calls, or touch RTP. A working IMS is Kamailio plus the surrounding systems below.
 
-## The honest scope line
+## Scope
 
 | Kamailio (CSCF) does | Kamailio does **not** do |
 |---|---|
@@ -14,7 +14,7 @@
 | Ask for charging (Ro/Rf) | Rate or bill the call |
 | — | Relay or transcode media (RTP) |
 
-Everything in the right-hand column is a separate system. Here's the ring.
+Everything in the right-hand column is a separate system.
 
 ## The surrounding components
 
@@ -64,23 +64,21 @@ flowchart TB
 
 **DRA / SLF — Diameter routing.** In anything beyond a single-HSS lab you put a **Diameter Routing Agent** between the CSCFs and the HSS/PCRF/OCS, so the CSCF has one Diameter peer to point at instead of N. Open-source choice: **freeDiameter** as a relay/DRA.
 
-**rtpengine — media.** This is the box that actually relays (and optionally transcodes/encrypts) the RTP. Kamailio steers it via the `rtpengine` module but never carries media itself. It also handles ICE/SRTP for WebRTC-style access.
+**rtpengine — media.** Relays (and optionally transcodes/encrypts) RTP, and handles ICE/SRTP for WebRTC access. Kamailio steers it via the `rtpengine` module but never carries media itself.
 
 **DNS.** IMS routing leans hard on DNS: **NAPTR/SRV** to find CSCFs, **ENUM** to turn `tel:` numbers into SIP URIs. A misconfigured resolver breaks call routing in ways that look like CSCF bugs. **CoreDNS** is a clean choice (and it's already the default in Kubernetes).
 
 **DB.** S-CSCF registration state needs persistence to survive restarts. **MariaDB/MySQL** is the tested path for `ims_usrloc_scscf` (hardcoded SQL — see [10.2](32-ims-cscf.md)); **Valkey/Redis** is lighter and is what rtpengine wants for HA, but needs schema handling on the Kamailio side.
 
-**EPC / 5GC core.** None of the above matters until a device can get an IP bearer and reach the P-CSCF. That's the packet core — **SMF/UPF** in 5G, PGW in 4G — which also discovers the P-CSCF address and (with the PCRF) sets up the dedicated voice bearer. open5gs covers this too.
+**EPC / 5GC core.** The device needs an IP bearer and a route to the P-CSCF before any of the above applies. That's the packet core — **SMF/UPF** in 5G, PGW in 4G — which also discovers the P-CSCF address and (with the PCRF) sets up the dedicated voice bearer. open5gs covers this too.
 
 **Monitoring.** Diameter and SIP both fail quietly; you want **Prometheus/Grafana** for metrics and **Loki**-style log aggregation from day one, plus packet capture (`sip || diameter || gtpv2`) for the inevitable flow debugging.
 
-## The shape of a full stack
-
-Put together, a minimal-but-complete software IMS is roughly:
+## A minimal complete stack
 
 > **Kamailio** (P/I/S-CSCF) + **open5gs** (HSS, PCRF, SMF, UPF) + **CGRateS** (OCS) + **freeDiameter** (DRA) + **rtpengine** (media) + **CoreDNS** + a **DB** + **Prometheus/Grafana/Loki** + a **test UE**.
 
-That's exactly the component list assembled in the lab walked through next — which is why [10.5](35-ims-lab.md) is a concrete payoff for this whole part rather than yet another diagram.
+This is the component list assembled in the lab in [10.5](35-ims-lab.md).
 
 ---
 

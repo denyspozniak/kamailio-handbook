@@ -1,14 +1,14 @@
 # 10.5 Робочий референс — софтовий IMS-стенд
 
 > [!IMPORTANT]
-> Діаграми заводять лише до певної межі. Найшвидший спосіб *зрозуміти* IMS — підняти повний на ноутбуці й дивитися на пакети. Проєкт [**`lyatanski/ims`**](https://github.com/lyatanski/ims) — саме це: цілком софтовий IMS-плейграунд — Kamailio CSCF плюс повний supporting cast — зшитий докупи через Docker Compose і Helm. Цей розділ читає його як навчальний артефакт: що в ньому, як шматки мапляться на все в цій частині, і чому це гарне місце для старту.
+> Проєкт [**`lyatanski/ims`**](https://github.com/lyatanski/ims) — це повний, цілком софтовий IMS — Kamailio CSCF плюс повний supporting cast — зшитий через Docker Compose і Helm, запускається на одній машині. Цей розділ мапить його компоненти на решту цієї частини.
 
 > [!NOTE]
 > `lyatanski/ims` — сторонній лаб, що підтримується незалежно від цього посібника. Сприймайте його як навчально-тестовий референс, не як production-blueprint, і звіряйтеся з репозиторієм щодо поточного стану — він активно розвивається.
 
 ## Що це
 
-Відтворюваний, цілком опенсорсний IMS-core, який підіймаєте однією командою `docker compose` (і передеплоюєте на Kubernetes через прикладені Helm-чарти). Його заявлені цілі промовисті: *софтовий плейграунд для тестування*, *документування конфігурації опенсорс-компонентів* і *чисте Compose-рішення*, що також постачає **Helm-чарти** для Kubernetes. Він цілить у VoLTE/5G-flow'и і тримається реальних 3GPP-специфікацій (TS 23.228, 24.229, Cx 29.228/229, Rx 29.214, charging 32.299).
+Відтворюваний, цілком опенсорсний IMS-core, що підіймається однією командою `docker compose` або передеплоюється на Kubernetes через прикладені Helm-чарти. Він цілить у VoLTE/5G-flow'и і тримається 3GPP-специфікацій (TS 23.228, 24.229, Cx 29.228/229, Rx 29.214, charging 32.299).
 
 ## Компоненти, змапані на цю частину
 
@@ -49,7 +49,7 @@ flowchart LR
 
 ## Як усередині налаштований Kamailio
 
-Найцікавіше для цього посібника — конфігурація CSCF. Лаб тримає три ролі як окремі конфіги Kamailio зі спільною базою:
+Лаб тримає три CSCF-ролі як окремі конфіги Kamailio зі спільною базою:
 
 - `common.cfg` — спільні завантаження модулів і дефолти
 - `proxy.cfg` — **P-CSCF**
@@ -67,7 +67,7 @@ ims_isc        ims_qos            ims_charging
 ims_dialog     rtpengine          db_redis
 ```
 
-плюс звичні робочі конячки (`tm`, `rr`, `sl`, `sanity`, `siputils`, `textops`, `pv`, `presence`/`pua` для reg-event-підписки, і `xhttp_prom` для Prometheus-метрик). Бачити їх завантаженими разом, у role-specific-файлах — найясніше можливе підтвердження мапи роль→модуль із [10.2](32-ims-cscf.md).
+плюс звичні робочі конячки (`tm`, `rr`, `sl`, `sanity`, `siputils`, `textops`, `pv`, `presence`/`pua` для reg-event-підписки, і `xhttp_prom` для Prometheus-метрик). Завантажені разом у role-specific-файлах, вони — мапа роль→модуль із [10.2](32-ims-cscf.md) у конкретній формі.
 
 ## Що з цим робити
 
@@ -81,16 +81,14 @@ ims_dialog     rtpengine          db_redis
 
 ## Інший кут — академічний single-VM-стенд
 
-Cloud-native compose/Helm-стек вище — це один кінець спектру. Інший кінець — і чудовий перший контакт з IMS — це навмисно мінімальний, навчально-орієнтований сетап: **[IMS-Kamailio-Tutorial](https://github.com/anabelen-garcia/IMS-Kamailio-Tutorial)** від Ana Belén García Hernando (Universidad Politécnica de Madrid). Він будує повний IMS на **одній VM**, оптимізований не під реалістичність, а під *чітке бачення flow'ів у Wireshark*.
+Контрастний, навчально-орієнтований сетап — **[IMS-Kamailio-Tutorial](https://github.com/anabelen-garcia/IMS-Kamailio-Tutorial)** від Ana Belén García Hernando (Universidad Politécnica de Madrid): повний IMS на **одній VM**, оптимізований під чіткі Wireshark-flow'и, а не під реалістичність.
 
-Чим він повчальний:
+- **Усі три CSCF-ролі — це Kamailio.** P-CSCF (`:5060`), S-CSCF (`:6060`) та I-CSCF (`:4060`) крутяться як три окремі процеси Kamailio на одному хості ([форк herlesupreeth](https://github.com/herlesupreeth/kamailio) із `Kamailio_IMS_Config`-шаблонами) — один бінар покриває весь шар CSCF. Кожна роль тримає свій `kamailio_*.cfg`, `*.xml` (конфіг Diameter-peer'а `cdp`) і файл defines.
+- **Інший склад компонентів.** Kamailio з **FHoSS** (Java-HSS від FOKUS з лінії OpenIMSCore) замість open5gs, **bind9** для DNS, **PJSUA** як тестовий UA — контраст із виборами [10.4](34-ims-full-solution.md): ролі важать більше за продукти.
+- **Чистий IMS, без EPC.** Без пакетного ядра, тож **немає Rx-інтерфейсу** і підняття bearer'а — SIP+Cx-ядро IMS в ізоляції.
+- **Capture-first.** Кожна функція отримує свій `127.0.0.X`-loopback; cgroups + iptables SNAT + nflog дають один capture з коректно-адресованими, причинно-впорядкованими трасами.
 
-- **Усі три CSCF-ролі — це Kamailio.** P-CSCF (`:5060`), S-CSCF (`:6060`) та I-CSCF (`:4060`) крутяться як три окремі процеси Kamailio на одному хості — найясніша можлива демонстрація того, що один шматок софту (Kamailio, тут [форк herlesupreeth](https://github.com/herlesupreeth/kamailio) із його `Kamailio_IMS_Config`-шаблонами) покриває весь шар CSCF. Кожна роль тримає свій `kamailio_*.cfg` (cfg), `*.xml` (конфіг Diameter-peer'а `cdp`) і файл defines.
-- **Інший склад компонентів.** Він парує Kamailio з **FHoSS** (Java-HSS від FOKUS з лінії OpenIMSCore) замість open5gs, **bind9** для DNS і **PJSUA** як тестовий UA — корисний контраст із виборами [10.4](34-ims-full-solution.md), що показує: ролі важать більше за конкретні продукти.
-- **Чистий IMS, без EPC.** Він навмисно викидає пакетне ядро, тож **немає Rx-інтерфейсу** і підняття bearer'а — чистий спосіб вивчати SIP+Cx-ядро IMS в ізоляції до додавання VoLTE-складності.
-- **Capture-first-інженерія.** Кожна функція отримує свій `127.0.0.X`-loopback, а стенд використовує cgroups + iptables SNAT + nflog, щоб один capture показував коректно-адресовані, причинно-впорядковані траси. Ця обв'язка — сама по собі маленький майстер-клас зі спостереження за multi-process-системою.
-
-Обидва стенди зрештою сходяться до канонічного upstream-walkthrough — **[Open5GS «VoLTE Setup with Kamailio IMS and Open5GS»](https://open5gs.org/open5gs/docs/tutorial/02-VoLTE-setup/)** Сукчана Лі (Sukchan Lee) — який варто прочитати окремо як референс-рецепт, від якого походить більшість Kamailio-IMS-сетапів.
+Обидва стенди походять від upstream-рецепту — **[Open5GS «VoLTE Setup with Kamailio IMS and Open5GS»](https://open5gs.org/open5gs/docs/tutorial/02-VoLTE-setup/)** Сукчана Лі.
 
 ## Підсумок
 
