@@ -1,4 +1,4 @@
-# 9.1 Process roles glossary
+# 11.1 Process roles glossary
 
 A quick reference for what each process in a running Kamailio actually is, in the order you'd see them from `ps -ef | grep kamailio`.
 
@@ -61,5 +61,5 @@ The format is `kamailio: <role> [<index>]` for indexed workers. The `rank` menti
 ---
 
 <p markdown="1" align="center">
-  [← Table of contents](../) · [← 7.3 Event routes](26-event-routes.md) · [Next: 9.2 Term map →](28-term-map.md)
+  [← Table of contents](../) · [← 10.5 The IMS lab](35-ims-lab.md) · [Next: 11.2 Term map →](28-term-map.md)
 </p>

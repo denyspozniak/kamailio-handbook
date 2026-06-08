@@ -1,4 +1,4 @@
-# 9.3 What's new — and what's in development
+# 11.3 What's new — and what's in development
 
 > [!IMPORTANT]
 > The handbook targets **Kamailio 6.1.x** (April 2026 stable line). This appendix lists the headline changes between recent major versions, what was archived along the way, and where to look for what's happening on the development branch. It is intentionally a *pointer* — the wiki and the source repo are the authoritative trackers.
@@ -104,5 +104,5 @@ If you encounter behaviour that contradicts the handbook on a current version, *
 ---
 
 <p markdown="1" align="center">
-  [← Table of contents](../) · [← 9.2 Term map](28-term-map.md) · [Next: 10.1 What IMS is →](31-ims-overview.md)
+  [← Table of contents](../) · [← 11.2 Term map](28-term-map.md) · [Back to start →](index.md)
 </p>

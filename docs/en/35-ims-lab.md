@@ -97,5 +97,5 @@ IMS puts Kamailio in a constrained role: a conformant CSCF that owns the SIP ref
 ---
 
 <p markdown="1" align="center">
-  [← Table of contents](../) · [← 10.4 The full solution](34-ims-full-solution.md) · [Next: 11.1 Security →](36-security-surface.md)
+  [← Table of contents](../) · [← 10.4 The full solution](34-ims-full-solution.md) · [Next: 11.1 Process roles →](27-process-roles.md)
 </p>

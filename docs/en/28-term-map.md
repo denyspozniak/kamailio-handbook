@@ -1,4 +1,4 @@
-# 9.2 Term map
+# 11.2 Term map
 
 Quick glossary of Kamailio-specific terms used throughout the handbook. SIP-protocol terms (UAC, UAS, INVITE, etc.) are taken as known from RFC 3261.
 
@@ -69,5 +69,5 @@ This concludes the handbook. The next time something in production looks strange
 ---
 
 <p markdown="1" align="center">
-  [← Table of contents](../) · [← 9.1 Process roles](27-process-roles.md) · [Next: 9.3 What's new →](30-whats-new.md)
+  [← Table of contents](../) · [← 11.1 Process roles](27-process-roles.md) · [Next: 11.3 What's new →](30-whats-new.md)
 </p>

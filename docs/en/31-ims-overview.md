@@ -66,5 +66,5 @@ The blue boxes are Kamailio. The gold boxes are everything else you need — and
 ---
 
 <p markdown="1" align="center">
-  [← Table of contents](../) · [← 9.3 What's new](30-whats-new.md) · [Next: 10.2 CSCF roles →](32-ims-cscf.md)
+  [← Table of contents](../) · [← 9.4 Fuzzing & RCE](39-security-fuzzing-rce.md) · [Next: 10.2 CSCF roles →](32-ims-cscf.md)
 </p>

@@ -1,7 +1,7 @@
-# 11.1 SIP attack surface — and why UDP/5060 is exposed
+# 9.1 SIP attack surface — and why UDP/5060 is exposed
 
 > [!IMPORTANT]
-> Every prior part of this handbook assumed friendly input — a UE you provisioned, a peer you trust, a config you wrote. Part 11 drops that assumption. The internet is talking to your `5060` socket right now, and most of what it sends is hostile. The angle here is internals: *where* attacker bytes live inside Kamailio, and *what* does — and does not — sanitize them before your script gets a say.
+> Every prior part of this handbook assumed friendly input — a UE you provisioned, a peer you trust, a config you wrote. Part 9 drops that assumption. The internet is talking to your `5060` socket right now, and most of what it sends is hostile. The angle here is internals: *where* attacker bytes live inside Kamailio, and *what* does — and does not — sanitize them before your script gets a say.
 
 ## A public UDP/5060 socket has no front door
 
@@ -39,7 +39,7 @@ That splits your topology into two zones:
 - **The access edge** — UEs out on the internet. Untrusted by default. Everything here must be authenticated (digest) or filtered before it earns any expensive handling.
 - **The core** — gateways, media servers, peer SIP servers. Trusted because they're reached over controlled links and/or authenticated as peers, not because of where their packets seem to originate.
 
-This framing drives the rest of Part 11: **filter cheap and early, authenticate the rest.** Reject the obvious garbage with the least possible work, then spend real CPU only on traffic that has earned it.
+This framing drives the rest of Part 9: **filter cheap and early, authenticate the rest.** Reject the obvious garbage with the least possible work, then spend real CPU only on traffic that has earned it.
 
 ```mermaid
 flowchart TB
@@ -65,10 +65,10 @@ flowchart TB
 
 The diagram's point is the dashed line: the hostile packet rides the *same* pipeline as the good one, and the earliest reject point is still downstream of the parse — inside `request_route`, once your early in-route checks have run. Everything before `drop` is work you did on behalf of an attacker.
 
-So the goal is to move that reject point as far left — and make it as cheap — as possible. That's [11.2](37-security-modules.md): the modules that let you reject earlier and cheaper, starting with source-IP rate limiting in `pike` and progressively more selective filters before you ever spend a transaction.
+So the goal is to move that reject point as far left — and make it as cheap — as possible. That's [9.2](37-security-modules.md): the modules that let you reject earlier and cheaper, starting with source-IP rate limiting in `pike` and progressively more selective filters before you ever spend a transaction.
 
 ---
 
 <p markdown="1" align="center">
-  [← Table of contents](../) · [← 10.5 The IMS lab](35-ims-lab.md) · [Next: 11.2 Defensive modules →](37-security-modules.md)
+  [← Table of contents](../) · [← 7.3 Event routes](26-event-routes.md) · [Next: 9.2 Defensive modules →](37-security-modules.md)
 </p>

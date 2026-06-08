@@ -98,10 +98,11 @@ flowchart LR
 - [8.4 `dispatcher`](22-dispatcher.md) — hash-based stickiness, набори шлюзів, failover-алгоритми ✅
 - [8.5 `dmq`](23-dmq.md) — синхронізація стану між інстансами Kamailio ✅
 
-### 9. Довідник
-- [9.1 Глосарій ролей процесів](27-process-roles.md) — хто є хто в `ps`-виводі ✅
-- [9.2 Карта термінів](28-term-map.md) — швидкий глосарій Kamailio-specific ✅
-- [9.3 Що нового і що в розробці](30-whats-new.md) — версійний ландшафт (5.8 → 6.0 → 6.1), нові модулі, заархівовані, де стежити за devel ✅
+### 9. Безпека і hardening
+- [9.1 Поверхня атаки SIP і модель загроз](36-security-surface.md) — чому публічний UDP/5060-сокет відкритий; ціна неавтентифікованого повідомлення; межі довіри ✅
+- [9.2 Захисні модулі](37-security-modules.md) — `sanity`, `secfilter`, `pike`, `topoh`, digest-auth — що насправді перевіряє кожен ✅
+- [9.3 Динамічні блок-листи: apiban та ipban](38-security-blocklists.md) — стоковий antiflood у `kamailio.cfg` (htable `ipban` + `pike`) і фід apiban.org ✅
+- [9.4 Fuzzing і кейс command-injection → RCE](39-security-fuzzing-rce.md) — fuzzing парсера; як SIP-заголовок стає reverse-shell, і де Kamailio є/не є вразливим ✅
 
 ### 10. Kamailio в IMS
 - [10.1 Що таке IMS і де тут Kamailio](31-ims-overview.md) — 3GPP-фреймінг, ролі CSCF, модель reference-points (Gm/Mw/Cx/Rx/Ro/ISC) ✅
@@ -110,11 +111,10 @@ flowchart LR
 - [10.4 Що ще треба навколо Kamailio](34-ims-full-solution.md) — HSS, PCRF, OCS, DRA, rtpengine, DNS, ядро — чесна межа ✅
 - [10.5 Робочий референс — софтовий IMS-стенд](35-ims-lab.md) — стек `lyatanski/ims` і академічний single-VM-туторіал ✅
 
-### 11. Безпека і hardening
-- [11.1 Поверхня атаки SIP і модель загроз](36-security-surface.md) — чому публічний UDP/5060-сокет відкритий; ціна неавтентифікованого повідомлення; межі довіри ✅
-- [11.2 Захисні модулі](37-security-modules.md) — `sanity`, `secfilter`, `pike`, `topoh`, digest-auth — що насправді перевіряє кожен ✅
-- [11.3 Динамічні блок-листи: apiban та ipban](38-security-blocklists.md) — стоковий antiflood у `kamailio.cfg` (htable `ipban` + `pike`) і фід apiban.org ✅
-- [11.4 Fuzzing і кейс command-injection → RCE](39-security-fuzzing-rce.md) — fuzzing парсера; як SIP-заголовок стає reverse-shell, і де Kamailio є/не є вразливим ✅
+### 11. Довідник
+- [11.1 Глосарій ролей процесів](27-process-roles.md) — хто є хто в `ps`-виводі ✅
+- [11.2 Карта термінів](28-term-map.md) — швидкий глосарій Kamailio-specific ✅
+- [11.3 Що нового і що в розробці](30-whats-new.md) — версійний ландшафт (5.8 → 6.0 → 6.1), нові модулі, заархівовані, де стежити за devel ✅
 
 ---
 

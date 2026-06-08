@@ -109,10 +109,10 @@ event_route[dashboard_done] {
 
 Три event-route'и в одному ланцюгу: реальний `dispatcher:dst-down`, `dashboard_done`-resume для async-HTTP, і (імпліцитно) dmq-реплікація htable-зміни, що стріляє свої handler'и на peer-нодах.
 
-Наступний розділ закриває посібник коротким reference'ом: глосарієм ролей процесів і картою термінів.
+Наступна частина — про безпеку і hardening: поверхня атаки SIP, захисні модулі, динамічні блок-листи і реальний кейс command-injection.
 
 ---
 
 <p markdown="1" align="center">
-  [← Зміст](../) · [← 7.2 kamcmd](25-kamcmd.md) · [Далі: 9.1 Ролі процесів →](27-process-roles.md)
+  [← Зміст](../) · [← 7.2 kamcmd](25-kamcmd.md) · [Далі: 9.1 Поверхня атаки SIP →](36-security-surface.md)
 </p>

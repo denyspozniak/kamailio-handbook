@@ -109,10 +109,10 @@ event_route[dashboard_done] {
 
 Three event routes wired together: the actual `dispatcher:dst-down`, a `dashboard_done` resume for the async HTTP call, and (implicitly) the dmq replication of the htable change which fires its own handlers on the peer nodes.
 
-The next chapter wraps the handbook with a short reference: the process role glossary and a term map you can scan back to when something doesn't make sense.
+The next part turns to security and hardening — the SIP attack surface, the defensive modules, dynamic blocklists, and a real command-injection case study.
 
 ---
 
 <p markdown="1" align="center">
-  [← Table of contents](../) · [← 7.2 kamcmd](25-kamcmd.md) · [Next: 9.1 Process roles →](27-process-roles.md)
+  [← Table of contents](../) · [← 7.2 kamcmd](25-kamcmd.md) · [Next: 9.1 SIP attack surface →](36-security-surface.md)
 </p>

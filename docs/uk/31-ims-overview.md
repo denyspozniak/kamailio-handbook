@@ -66,5 +66,5 @@ flowchart LR
 ---
 
 <p markdown="1" align="center">
-  [← Зміст](../) · [← 9.3 Що нового](30-whats-new.md) · [Далі: 10.2 Ролі CSCF →](32-ims-cscf.md)
+  [← Зміст](../) · [← 9.4 Fuzzing і RCE](39-security-fuzzing-rce.md) · [Далі: 10.2 Ролі CSCF →](32-ims-cscf.md)
 </p>

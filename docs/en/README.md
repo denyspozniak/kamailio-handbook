@@ -98,10 +98,11 @@ A single received SIP message walks through this pipeline. Most of what looks li
 - [8.4 `dispatcher`](22-dispatcher.md) — hash-based stickiness, gateway sets, failover algorithms ✅
 - [8.5 `dmq`](23-dmq.md) — distributed state sync between Kamailio instances ✅
 
-### 9. Reference
-- [9.1 Process roles glossary](27-process-roles.md) — what each `ps`-visible process actually is ✅
-- [9.2 Term map](28-term-map.md) — quick glossary of Kamailio-specific terms ✅
-- [9.3 What's new and what's in development](30-whats-new.md) — version landscape (5.8 → 6.0 → 6.1), new modules, archived modules, where to follow devel ✅
+### 9. Security & Hardening
+- [9.1 SIP attack surface & threat model](36-security-surface.md) — why a public UDP/5060 socket is exposed; the cost of an unauthenticated message; trust boundaries ✅
+- [9.2 Defensive modules](37-security-modules.md) — `sanity`, `secfilter`, `pike`, `topoh`, digest auth — what each actually checks ✅
+- [9.3 Dynamic blocklists: apiban & ipban](38-security-blocklists.md) — the stock `kamailio.cfg` antiflood (`ipban` htable + `pike`) and the apiban.org feed ✅
+- [9.4 Fuzzing & a command-injection → RCE case study](39-security-fuzzing-rce.md) — fuzzing the parser; how a SIP header becomes a reverse shell, and where Kamailio is/isn't the vuln ✅
 
 ### 10. Kamailio in IMS
 - [10.1 What IMS is and where Kamailio fits](31-ims-overview.md) — 3GPP framing, CSCF roles, the reference-point model (Gm/Mw/Cx/Rx/Ro/ISC) ✅
@@ -110,11 +111,10 @@ A single received SIP message walks through this pipeline. Most of what looks li
 - [10.4 What you still need around Kamailio](34-ims-full-solution.md) — HSS, PCRF, OCS, DRA, rtpengine, DNS, core — the honest scope line ✅
 - [10.5 A worked reference — a software IMS lab](35-ims-lab.md) — the `lyatanski/ims` stack and a single-VM academic tutorial ✅
 
-### 11. Security & Hardening
-- [11.1 SIP attack surface & threat model](36-security-surface.md) — why a public UDP/5060 socket is exposed; the cost of an unauthenticated message; trust boundaries ✅
-- [11.2 Defensive modules](37-security-modules.md) — `sanity`, `secfilter`, `pike`, `topoh`, digest auth — what each actually checks ✅
-- [11.3 Dynamic blocklists: apiban & ipban](38-security-blocklists.md) — the stock `kamailio.cfg` antiflood (`ipban` htable + `pike`) and the apiban.org feed ✅
-- [11.4 Fuzzing & a command-injection → RCE case study](39-security-fuzzing-rce.md) — fuzzing the parser; how a SIP header becomes a reverse shell, and where Kamailio is/isn't the vuln ✅
+### 11. Reference
+- [11.1 Process roles glossary](27-process-roles.md) — what each `ps`-visible process actually is ✅
+- [11.2 Term map](28-term-map.md) — quick glossary of Kamailio-specific terms ✅
+- [11.3 What's new and what's in development](30-whats-new.md) — version landscape (5.8 → 6.0 → 6.1), new modules, archived modules, where to follow devel ✅
 
 ---
 
