@@ -97,6 +97,8 @@ A single received SIP message walks through this pipeline. Most of what looks li
 - [8.3 `htable`](21-htable.md) — shared-memory hash tables as a poor man's Redis ✅
 - [8.4 `dispatcher`](22-dispatcher.md) — hash-based stickiness, gateway sets, failover algorithms ✅
 - [8.5 `dmq`](23-dmq.md) — distributed state sync between Kamailio instances ✅
+- [8.6 Media — `rtpengine`](40-rtpengine.md) — anchoring RTP, controlling the daemon from the config, RTP-bleed defence, SRTP/DTLS↔RTP, ICE/STUN, kernel-mode forwarding ✅
+- [8.7 Capturing SIP over TLS](41-siptrace.md) — why wire capture fails on TLS/WSS, tapping decrypted SIP with `siptrace`, HEP, and live `sngrep` ✅
 
 ### 9. Security & Hardening
 - [9.1 SIP attack surface & threat model](36-security-surface.md) — why a public UDP/5060 socket is exposed; the cost of an unauthenticated message; trust boundaries ✅

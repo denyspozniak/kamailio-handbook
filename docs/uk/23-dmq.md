@@ -146,14 +146,14 @@ dmq_process_custom("$peer", "$node_uri", "$body", "$content_type")
 > [!NOTE]
 > Це приземлилося через master-лінію — операційний polish від людей, що ганяють великі `dmq`-кластери в бою. Перевіряйте версію модуля, перш ніж покладатися на будь-що з цього — `kamcmd core.version` і README модуля.
 
-## Чому це правильне завершення розділу про фішки
+## Чому `dmq` — це scale-out-шов
 
 `dmq` — архітектурна частина, що перетворює Kamailio з «потужний single-box SIP-сервер» на «scale-out SIP-платформу». Кожна інша частина, про яку ви читали — process model, shm, lumps, transactions, dialogs, KEMI, topos, async, htable, dispatcher — існує на масштабі одного інстансу. `dmq` — шов, що дозволяє оперувати багатьма з них так, ніби це один. Жодна з них не дизайнилася під distribution зі старту; `dmq` додає це як opt-in retrofit, що чесно і працює.
 
-Далі — control plane (RPC, `kamcmd`, event-routes), потім Частина 9 — безпека і hardening — Частина 10 про Kamailio в IMS, і завершальний reference-розділ (глосарій ролей процесів, карта термінів, що нового).
+Решта фішок виходять за межі самого message-path: [8.6](40-rtpengine.md) анкорить медіа-план через `rtpengine`, а [8.7](41-siptrace.md) захоплює зашифроване сигналізування через `siptrace`. Після цього йде control plane (RPC, `kamcmd`, event-routes), потім Частина 9 — безпека і hardening — Частина 10 про Kamailio в IMS, і завершальний reference-розділ (глосарій ролей процесів, карта термінів, що нового).
 
 ---
 
 <p markdown="1" align="center">
-  [← Зміст](../) · [← 8.4 dispatcher](22-dispatcher.md) · [Далі: 7.1 Архітектура RPC →](24-rpc-architecture.md)
+  [← Зміст](../) · [← 8.4 dispatcher](22-dispatcher.md) · [Далі: 8.6 Медіа — rtpengine →](40-rtpengine.md)
 </p>

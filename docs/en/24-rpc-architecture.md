@@ -123,5 +123,5 @@ The next chapter looks at `kamcmd` specifically and the operational dashboard it
 ---
 
 <p markdown="1" align="center">
-  [← Table of contents](../) · [← 8.5 dmq](23-dmq.md) · [Next: 7.2 kamcmd →](25-kamcmd.md)
+  [← Table of contents](../) · [← 8.7 Capturing SIP over TLS](41-siptrace.md) · [Next: 7.2 kamcmd →](25-kamcmd.md)
 </p>

@@ -123,5 +123,5 @@ JSON-RPC через HTTP **теж не має built-in auth**, за дизайн
 ---
 
 <p markdown="1" align="center">
-  [← Зміст](../) · [← 8.5 dmq](23-dmq.md) · [Далі: 7.2 kamcmd →](25-kamcmd.md)
+  [← Зміст](../) · [← 8.7 Захоплення SIP через TLS](41-siptrace.md) · [Далі: 7.2 kamcmd →](25-kamcmd.md)
 </p>

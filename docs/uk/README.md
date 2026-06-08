@@ -97,6 +97,8 @@ flowchart LR
 - [8.3 `htable`](21-htable.md) — хеш-таблиці у спільній пам'яті як «бідний Redis» ✅
 - [8.4 `dispatcher`](22-dispatcher.md) — hash-based stickiness, набори шлюзів, failover-алгоритми ✅
 - [8.5 `dmq`](23-dmq.md) — синхронізація стану між інстансами Kamailio ✅
+- [8.6 Медіа — `rtpengine`](40-rtpengine.md) — анкорінг RTP, керування демоном з конфіга, захист від RTP-bleed, SRTP/DTLS↔RTP, ICE/STUN, kernel-mode-форвардинг ✅
+- [8.7 Захоплення SIP через TLS](41-siptrace.md) — чому wire-capture не працює на TLS/WSS, тап розшифрованого SIP через `siptrace`, HEP і живий `sngrep` ✅
 
 ### 9. Безпека і hardening
 - [9.1 Поверхня атаки SIP і модель загроз](36-security-surface.md) — чому публічний UDP/5060-сокет відкритий; ціна неавтентифікованого повідомлення; межі довіри ✅

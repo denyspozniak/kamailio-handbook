@@ -146,14 +146,14 @@ That turns `dmq` from "modules quietly sync their own state" into a replication 
 > [!NOTE]
 > These shipped through the master line and are the kind of operational polish you get from people running large `dmq` clusters in anger. Check your module version before relying on any of them — `kamcmd core.version` and the module README.
 
-## Why this is the right closer for the tricks chapter
+## Why `dmq` is the scale-out seam
 
 `dmq` is the architectural piece that turns Kamailio from "a powerful single-box SIP server" into "a scale-out SIP platform." Every other piece you've read about — process model, shm, lumps, transactions, dialogs, KEMI, topos, async, htable, dispatcher — exists at the scale of one instance. `dmq` is the seam that lets you operate many of those instances as if they were one. None of them designed for distribution from the start; `dmq` adds it as an opt-in retrofit, which is honest and which works.
 
-What follows is the control plane (RPC, `kamcmd`, event routes), then Part 9 — security and hardening — Part 10 on running Kamailio in IMS, and a closing reference section (process-role glossary, term map, what's new).
+The remaining tricks step outside the message path itself: [8.6](40-rtpengine.md) anchors the media plane with `rtpengine`, and [8.7](41-siptrace.md) captures encrypted signalling with `siptrace`. After that comes the control plane (RPC, `kamcmd`, event routes), then Part 9 — security and hardening — Part 10 on running Kamailio in IMS, and a closing reference section (process-role glossary, term map, what's new).
 
 ---
 
 <p markdown="1" align="center">
-  [← Table of contents](../) · [← 8.4 dispatcher](22-dispatcher.md) · [Next: 7.1 RPC architecture →](24-rpc-architecture.md)
+  [← Table of contents](../) · [← 8.4 dispatcher](22-dispatcher.md) · [Next: 8.6 Media — rtpengine →](40-rtpengine.md)
 </p>

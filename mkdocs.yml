@@ -48,6 +48,8 @@ nav:
       - en/21-htable.md
       - en/22-dispatcher.md
       - en/23-dmq.md
+      - en/40-rtpengine.md
+      - en/41-siptrace.md
   - 9. Security & Hardening:
       - en/36-security-surface.md
       - en/37-security-modules.md
