@@ -24,7 +24,7 @@ And they are looking. Automated scanners sweep the IPv4 space continuously — `
 
 Here is the internals hook that makes early filtering matter: a hostile message does real work inside Kamailio *before* your script can reject it.
 
-Every datagram that reaches the socket walks the same path as a legitimate one. The receive loop parses the first line and indexes the header boundaries ([3.1 reception](07-reception.md)), then `request_route` executes ([3.4 the routing engine](10-routing-engine.md)). Your defenses live *inside* that route: `route("sanity")` is typically the very first thing the block does, and your first `drop`/`exit` comes right after. The cheapest possible rejection still happens *after* parse and *after* routing has already begun — there is no "reject before parse" hook in the script.
+Every datagram that reaches the socket walks the same path as a legitimate one. The receive loop parses the first line and indexes the header boundaries ([3.1 reception](07-reception.md)), then `request_route` executes ([3.4 the routing engine](10-routing-engine.md)). Your defenses live *inside* that route — an early in-route check like a source-IP ban-table lookup or `route("sanity")`, then your first `drop`/`exit`. The cheapest possible rejection still happens *after* parse and *after* routing has already begun — there is no "reject before parse" hook in the script.
 
 Lazy header parsing keeps that cost bounded most of the time. Kamailio parses headers on demand, not eagerly ([3.2 the parsed message](08-parsed-message.md)), so a probe that you drop after one `$rm` check is cheap. But the attacker controls the headers. Crafted, oversized, or pathological header sets can force a full parse — and a body with a `Content-Length` you trust pulls more work in. The attacker, not you, decides how much of the parser runs.
 
@@ -63,7 +63,7 @@ flowchart TB
     class WASTE,WORK warn
 ```
 
-The diagram's point is the dashed line: the hostile packet rides the *same* pipeline as the good one, and the earliest reject point is still downstream of the parse — inside `request_route`, after `sanity` has already run. Everything before `drop` is work you did on behalf of an attacker.
+The diagram's point is the dashed line: the hostile packet rides the *same* pipeline as the good one, and the earliest reject point is still downstream of the parse — inside `request_route`, once your early in-route checks have run. Everything before `drop` is work you did on behalf of an attacker.
 
 So the goal is to move that reject point as far left — and make it as cheap — as possible. That's [11.2](37-security-modules.md): the modules that let you reject earlier and cheaper, starting with source-IP rate limiting in `pike` and progressively more selective filters before you ever spend a transaction.
 

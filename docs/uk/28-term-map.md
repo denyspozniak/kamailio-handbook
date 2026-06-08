@@ -23,7 +23,7 @@
 | **`KSR.*`** | Глобальний namespace, експонований в KEMI-скриптах. `KSR.tm.t_relay()` дзвонить зареєстровану C-функцію. |
 | **lump** | Queued message-мутація (add чи delete байтів на offset'і). Застосовується одним проходом на send'і. |
 | **mod_init()** | Хук модуля, що біжить раз у main-процесі, до fork'у. Тут виділяється shm і реєструються RPC-команди. |
-| **pike** | Модуль, що відстежує rate запитів per-source-IP через leaky bucket у shm і мітить флуд. |
+| **pike** | Модуль, що відстежує rate запитів per-source-IP через лічильник за вікно семплювання у shm і мітить флуд. |
 | **pkg** | Per-worker приватна купа. Lifetime — одне повідомлення; невидима іншим воркерам. |
 | **pseudo-variable** | Script-side getter/setter на `sip_msg` чи runtime-state. Імена з `$` — `$ru`, `$tu`, `$hdr(X)`, `$var(x)`, `$shv(x)`. |
 | **rank** | Цілий ID forked-воркера. Використовується для RNG-seed'у, вибору timer-слотів, log-disambiguation. |

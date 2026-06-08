@@ -23,7 +23,7 @@ Quick glossary of Kamailio-specific terms used throughout the handbook. SIP-prot
 | **`KSR.*`** | The global namespace exposed in KEMI scripts. `KSR.tm.t_relay()` calls the registered C function. |
 | **lump** | A queued message mutation (add or delete bytes at an offset). Applied in one pass at send time. |
 | **mod_init()** | Module hook that runs once in the main process, before fork. Where shm is allocated and RPC commands are registered. |
-| **pike** | Module that tracks per-source-IP request rate with a leaky bucket in shm and flags floods. |
+| **pike** | Module that tracks per-source-IP request rate with a per-source counter over a sampling window in shm and flags floods. |
 | **pkg** | Per-worker private memory heap. Lifetime is one message; not visible to other workers. |
 | **pseudo-variable** | A script-side getter/setter on the `sip_msg` or runtime state. Names start with `$` — `$ru`, `$tu`, `$hdr(X)`, `$var(x)`, `$shv(x)`. |
 | **rank** | Integer ID of a forked worker process. Used for RNG seeding, timer-slot selection, log disambiguation. |
