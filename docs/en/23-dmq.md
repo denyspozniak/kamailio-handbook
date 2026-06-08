@@ -32,7 +32,7 @@ flowchart TB
     class K1,K2,K3 k
 ```
 
-When a module on one node wants to broadcast state, it publishes a message on a named `dmq` "channel" (usrloc, dialog, htable, dispatcher each have their own). Every other node subscribed to that channel receives the message and applies the update to its own shm.
+When a module on one node wants to broadcast state, it publishes a message on a named `dmq` "channel" (usrloc, dialog, htable each have their own). Every other node subscribed to that channel receives the message and applies the update to its own shm.
 
 The transport is normal SIP. A `KDMQ` (a custom SIP method) request goes from one node to another. The receiver parses, dispatches by channel name to the appropriate module, and the module updates its in-memory state.
 
@@ -45,7 +45,6 @@ Each module that supports dmq registers its own channel handler. The well-known 
 | `usrloc` | `usrloc` | Contact inserts, updates, deletes |
 | `dialog` | `dialog` | Dialog state transitions (early → confirmed → terminated) |
 | `htable` | per-table channel | Entry inserts and deletes (configurable per table) |
-| `dispatcher` | `dispatcher` | Destination state changes (active/inactive) |
 | `dmq_usrloc` | dedicated | Specialised usrloc-only replication with stronger ordering |
 
 The list grows as modules add dmq support. The pattern is the same: when the module mutates its in-shm state, it serialises the change and publishes; receivers deserialise and apply.
@@ -72,7 +71,7 @@ For larger clusters, the architectural answer isn't a more complex dmq topology 
 2. Module publishes the change to dmq.
 3. Some milliseconds later, nodes B and C receive the message and apply it.
 
-During step 2-3, node B and C have stale state. For most replicated state — registrations, dialog state, dispatcher liveness — this is harmless. A REGISTER that hasn't propagated yet just means a slightly delayed first call from that user. A dialog termination that hasn't propagated yet just means a slightly delayed cleanup on the other nodes.
+During step 2-3, node B and C have stale state. For most replicated state — registrations, dialog state — this is harmless. A REGISTER that hasn't propagated yet just means a slightly delayed first call from that user. A dialog termination that hasn't propagated yet just means a slightly delayed cleanup on the other nodes.
 
 What's not okay is **anything that depends on a strictly consistent view across nodes**. dmq is not a coordination primitive; it's a replication bus. If you need locks across nodes, an external system (Redis, ZooKeeper) is the right place. dmq does not replace that.
 
@@ -101,13 +100,12 @@ A real external store (Redis, often) is the right answer when:
 - You need stronger consistency or query capabilities (TTLs, atomic ops, range queries).
 - You're sharing state with non-Kamailio services.
 
-In practice, large operators use **both**: dmq for the cheap fast-replicating state (registrar contacts, dispatcher liveness), Redis (or similar) for the things that need real persistence and strong queries.
+In practice, large operators use **both**: dmq for the cheap fast-replicating state (registrar contacts, dialog state), Redis (or similar) for the things that need real persistence and strong queries.
 
 ## Operational use
 
 ```bash
 kamcmd dmq.list_nodes      # show the dmq cluster membership from this node's POV
-kamcmd dmq.process         # trigger one round of message processing manually
 ```
 
 `dmq.list_nodes` is the operational equivalent of "is the cluster healthy?" — it shows each peer's known state (`up`, `pending`, `disabled`) and the time of last contact. A peer that's been silent for too long is the first sign of a propagation problem.
@@ -146,7 +144,7 @@ dmq_process_custom("$peer", "$node_uri", "$body", "$content_type")
 That turns `dmq` from "modules quietly sync their own state" into a replication bus *you* can drive from the routing script — ship your own data between nodes, not just what a module author anticipated. Niche, but it's the difference between extending `dmq` and forking it.
 
 > [!NOTE]
-> These shipped through the master line and are the kind of operational polish you get from people running large `dmq` clusters in anger (net2phone's Vlad Litvinov authored most of this batch). Check your module version before relying on any of them — `kamcmd core.version` and the module README.
+> These shipped through the master line and are the kind of operational polish you get from people running large `dmq` clusters in anger. Check your module version before relying on any of them — `kamcmd core.version` and the module README.
 
 ## Why this is the right closer for the tricks chapter
 
