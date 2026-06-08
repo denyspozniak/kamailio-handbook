@@ -9,6 +9,24 @@ Kamailio маршрутизує `INVITE`'и і переписує SDP, але `R
 
 `rtpproxy` був оригіналом — керований аналогічно через однойменний модуль Kamailio. `rtpengine` (sipwise) замінив його: SRTP/DTLS, транскодинг, ICE і in-kernel-форвардинг. Вважайте `rtpproxy` legacy-мінімальним ретранслятором, а `rtpengine` — дефолтним вибором.
 
+```mermaid
+flowchart LR
+    A[UE A] -->|SIP| K[Kamailio<br/>лише сигналізація]
+    K -->|SIP| B[UE B]
+    K -.->|ng-контроль| RE[rtpengine<br/>медіа-anchor]
+    A ==>|RTP| RE
+    RE ==>|RTP| B
+
+    classDef sig fill:#1f6feb,stroke:#1f6feb,color:#fff
+    classDef media fill:#bf8700,stroke:#bf8700,color:#fff
+    classDef ue fill:#6e7681,stroke:#6e7681,color:#fff
+    class K sig
+    class RE media
+    class A,B ue
+```
+
+Тонкі стрілки — SIP (через Kamailio); товсті — RTP (через rtpengine, ніколи через Kamailio); пунктир — `ng` control-канал. Kamailio переписує SDP кожної сторони, щоб обидві медіа-ноги приземлялися на anchor.
+
 ## Керування з конфіга
 
 Модуль `rtpengine` спілкується з демоном через **ng-протокол** — бенкодовані словники через UDP, навмисно несумісні зі старим rtpproxy control-протоколом. Вказуєте один або кілька демонів:
@@ -57,6 +75,23 @@ iptables -I INPUT -p udp -j RTPENGINE --id 0
 ```
 
 Таргет `RTPENGINE` (прив'язаний до `--table 0` демона) передає кожен вхідний UDP-пакет kernel-модулю, який шукає його в in-kernel forwarding-таблиці: **hit** — пакет переписується (swap адрес плюс SRTP-decrypt/encrypt для зашифрованого потоку) і відправляється назад повністю в kernel, без копіювання в userspace; **miss** — проваль до демона (новий flow або control-пакет). Якщо модуль вивантажено — все автоматично повертається до userspace.
+
+```mermaid
+flowchart TB
+    PKT[Вхідний RTP / UDP] --> IPT["iptables INPUT<br/>-j RTPENGINE --id 0"]
+    IPT --> TBL{xt_RTPENGINE<br/>kernel forwarding-таблиця}
+    TBL -->|hit| FWD["відомий потік — swap адрес + SRTP-крипто,<br/>форвард у kernel"]
+    TBL -->|miss| DMN["новий flow / control — rtpengine daemon,<br/>userspace: latch, ICE, DTLS"]
+    DMN -.->|встановити entry| TBL
+    FWD --> OUT[назовні до peer'а]
+
+    classDef io fill:#6e7681,stroke:#6e7681,color:#fff
+    classDef kern fill:#1f6feb,stroke:#1f6feb,color:#fff
+    classDef user fill:#bf8700,stroke:#bf8700,color:#fff
+    class PKT,OUT io
+    class IPT,TBL,FWD kern
+    class DMN user
+```
 
 Результат: медіа в steady-state — це forwarding-table-lookup в kernel, а демон бачить лише setup, teardown і час від часу новий flow — десятки тисяч одночасних дзвінків на одному box'і. Потоки, що *не можуть* йти в kernel — ті, що потребують кожного пакета в userspace: recording і транскодинг.
 

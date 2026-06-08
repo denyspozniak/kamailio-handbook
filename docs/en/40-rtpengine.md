@@ -9,6 +9,24 @@ Kamailio routes `INVITE`s and rewrites SDP, but `RTP`/`RTCP` go straight between
 
 `rtpproxy` was the original, driven the same way through Kamailio's `rtpproxy` module. `rtpengine` (sipwise) superseded it with SRTP/DTLS, transcoding, ICE, and in-kernel forwarding. Treat `rtpproxy` as the legacy minimal relay and `rtpengine` as the default.
 
+```mermaid
+flowchart LR
+    A[UE A] -->|SIP| K[Kamailio<br/>signalling only]
+    K -->|SIP| B[UE B]
+    K -.->|ng control| RE[rtpengine<br/>media anchor]
+    A ==>|RTP| RE
+    RE ==>|RTP| B
+
+    classDef sig fill:#1f6feb,stroke:#1f6feb,color:#fff
+    classDef media fill:#bf8700,stroke:#bf8700,color:#fff
+    classDef ue fill:#6e7681,stroke:#6e7681,color:#fff
+    class K sig
+    class RE media
+    class A,B ue
+```
+
+Thin arrows are SIP (through Kamailio); thick arrows are RTP (through rtpengine, never through Kamailio); the dashed arrow is the `ng` control channel. Kamailio rewrites each side's SDP so both media legs land on the anchor.
+
 ## Steering it from the config
 
 The `rtpengine` module talks to the daemon over the **ng protocol** — bencoded dictionaries over UDP, deliberately incompatible with the old rtpproxy control protocol. Point it at one or more daemons:
@@ -57,6 +75,23 @@ iptables -I INPUT -p udp -j RTPENGINE --id 0
 ```
 
 The `RTPENGINE` target (matched to the daemon's `--table 0`) hands each inbound UDP packet to the kernel module, which looks it up in the in-kernel forwarding table: a **hit** is rewritten — address swap, plus SRTP decrypt/encrypt for an encrypted stream — and sent back out entirely in kernel, never copied to userspace; a **miss** falls through to the daemon (a new flow or a control packet). With the module unloaded, everything falls back to userspace automatically.
+
+```mermaid
+flowchart TB
+    PKT[Inbound RTP / UDP] --> IPT["iptables INPUT<br/>-j RTPENGINE --id 0"]
+    IPT --> TBL{xt_RTPENGINE<br/>kernel forwarding table}
+    TBL -->|hit| FWD["known stream — rewrite + SRTP crypto,<br/>forward in kernel"]
+    TBL -->|miss| DMN["new flow / control — rtpengine daemon,<br/>userspace: latch, ICE, DTLS"]
+    DMN -.->|install entry| TBL
+    FWD --> OUT[out to peer]
+
+    classDef io fill:#6e7681,stroke:#6e7681,color:#fff
+    classDef kern fill:#1f6feb,stroke:#1f6feb,color:#fff
+    classDef user fill:#bf8700,stroke:#bf8700,color:#fff
+    class PKT,OUT io
+    class IPT,TBL,FWD kern
+    class DMN user
+```
 
 The payoff: steady-state media is a kernel forwarding-table lookup, and the daemon only ever sees setup, teardown, and the occasional new flow — tens of thousands of concurrent calls on one box. The streams that *can't* go to the kernel are the ones that need every packet in userspace: recording and transcoding.
 
