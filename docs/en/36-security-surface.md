@@ -1,56 +1,43 @@
 # 9.1 SIP attack surface — and why UDP/5060 is exposed
 
 > [!IMPORTANT]
-> Every prior part of this handbook assumed friendly input — a UE you provisioned, a peer you trust, a config you wrote. Part 9 drops that assumption. The internet is talking to your `5060` socket right now, and most of what it sends is hostile. The angle here is internals: *where* attacker bytes live inside Kamailio, and *what* does — and does not — sanitize them before your script gets a say.
+> Every prior part assumed friendly input. Part 9 drops that. Your `5060` socket is taking hostile traffic right now; the real question is how much work a stranger's packet extracts from Kamailio *before* your script can say no. The angle is internals: where attacker bytes land, and what touches them on the way to your first `drop`.
 
-## A public UDP/5060 socket has no front door
+## No handshake, no identity
 
-UDP has no handshake. There is no SYN/ACK, no connection state, nothing that proves the sender is who the `Via` and source IP claim. A datagram arrives, the kernel hands it up, and Kamailio's receive loop reads it — the source IP in the packet header is whatever the sender wrote, and on UDP it is trivially spoofed. An attacker can forge any source address that isn't ingress-filtered between them and you.
+UDP carries no connection state. The source IP is whatever the sender wrote, spoofable to anything not ingress-filtered between you and them — so apparent origin proves nothing, and anyone who can route to your port lands a syntactically valid `INVITE`/`REGISTER`/`OPTIONS` straight in `request_route`. The transport gates nothing; your config is the whole perimeter.
 
-So anyone who can route a packet to your port can send a syntactically valid `INVITE`, `REGISTER`, or `OPTIONS`. Nothing about the transport gates that. The only thing standing between a stranger and your routing logic is the logic you wrote.
+The scans are constant: `sipvicious` and its forks (still stamping `friendly-scanner` into `User-Agent`) sweep the IPv4 space for anything that answers, and a freshly exposed instance fields its first unsolicited `OPTIONS` in minutes. Exposure is the ambient state of a public SIP port, not an event.
 
-And they are looking. Automated scanners sweep the IPv4 space continuously — `sipvicious` (the tool that still stamps `friendly-scanner` into `User-Agent` on a lot of forks) and its descendants probe every reachable `5060` looking for a server that answers. A freshly exposed Kamailio gets its first unsolicited `OPTIONS` within minutes, not days. Exposure is not a question of being targeted; it's the ambient state of a public SIP port.
-
-## The classic abuse cases
-
-| Attack | What the attacker does | Goal |
+| Attack | Mechanism | Goal |
 |---|---|---|
-| REGISTER hijack | Brute-forces or replays credentials to bind their own contact to your AOR | Steal an identity — intercept calls, place calls as the victim |
-| INVITE toll fraud | Gets an unauthenticated `INVITE` relayed toward the PSTN gateway | Make expensive calls on someone else's dime |
-| OPTIONS/UA recon | Sends `OPTIONS` (or `REGISTER`/`INVITE` probes) to read `Server`/`Allow` and enumerate extensions | Fingerprint the stack and map valid AORs before attacking |
-| Flood / DoS | Fires a high rate of requests — often malformed or half-completing transactions | Exhaust CPU, memory, or bandwidth until service degrades |
+| REGISTER hijack | brute/replay credentials, bind attacker `Contact` to your AOR | impersonate — intercept and place calls as the victim |
+| INVITE toll fraud | get an unauthenticated `INVITE` relayed toward a PSTN gateway | calls on someone else's bill |
+| UA/OPTIONS recon | read `Server`/`Allow`, enumerate AORs | fingerprint the stack, map targets |
+| Flood / half-open DoS | high rate, often malformed or never-completing | exhaust CPU, `pkg`/`shm`, or bandwidth |
 
-## What an unauthenticated message already costs you
+## What a rejected packet already cost you
 
-Here is the internals hook that makes early filtering matter: a hostile message does real work inside Kamailio *before* your script can reject it.
+There is no reject-before-parse hook. Every datagram — hostile or not — is read into the receiver's buffer, run through `parse_msg()` (first line, plus a first-pass index of each header's name and value byte-range, [3.1](07-reception.md)), and only then *enters* `request_route` ([3.4](10-routing-engine.md)). Your earliest possible `drop` — a source-IP ban-table lookup, `route("sanity")` — fires once routing is already underway. The cheapest rejection in Kamailio is still post-parse, post-dispatch.
 
-Every datagram that reaches the socket walks the same path as a legitimate one. The receive loop parses the first line and indexes the header boundaries ([3.1 reception](07-reception.md)), then `request_route` executes ([3.4 the routing engine](10-routing-engine.md)). Your defenses live *inside* that route — an early in-route check like a source-IP ban-table lookup or `route("sanity")`, then your first `drop`/`exit`. The cheapest possible rejection still happens *after* parse and *after* routing has already begun — there is no "reject before parse" hook in the script.
+Lazy parsing ([3.2](08-parsed-message.md)) caps the usual cost: header *values* stay unparsed until something reads them, so a probe you drop after one `$rm` test is cheap. But the attacker picks the headers — oversized, deeply folded, or pathological sets push `parse_headers()` into real work, and a trusted `Content-Length` drags a body in. The attacker, not you, decides how much parser runs per packet.
 
-Lazy header parsing keeps that cost bounded most of the time. Kamailio parses headers on demand, not eagerly ([3.2 the parsed message](08-parsed-message.md)), so a probe that you drop after one `$rm` check is cheap. But the attacker controls the headers. Crafted, oversized, or pathological header sets can force a full parse — and a body with a `Content-Length` you trust pulls more work in. The attacker, not you, decides how much of the parser runs.
-
-Then there's memory. Every message in flight churns `pkg` (per-process private memory), and the instant you handle anything statefully — `t_relay`, auth challenges, anything that creates a transaction — you allocate a transaction cell in `shm` ([2.2 memory architecture](03-memory-architecture.md)). A flood of half-open transactions that never complete is not a bandwidth attack; it's a memory-exhaustion DoS. The packets can be small and the rate modest, and you can still run `shm` dry holding transaction state for calls that will never finish.
+Memory is the sharper edge. Each in-flight message churns per-process `pkg`; the instant you go stateful — `t_relay`, an auth challenge — `tm` allocates a transaction cell in shared `shm` ([2.2](03-memory-architecture.md)) and pins it until a final reply or a timer. An `INVITE` that never receives its final response holds that cell until `fr_inv_timer` (default **120 s**) expires. A modest rate of never-completing transactions therefore parks thousands of cells in a fixed `-m` pool — not a bandwidth attack but `shm` exhaustion, after which allocations fail and *legitimate* calls drop. Small packets, modest rate, real outage.
 
 ## Trust boundaries
 
-The load-bearing rule: **on UDP, source IP is not an identity.** Without digest auth, you cannot conclude anything about *who* sent a packet from *where* it appears to come from. Source-IP allowlists are useful only where the path between you and the source is trusted (a private link to a known peer), never on the open access edge.
-
-That splits your topology into two zones:
-
-- **The access edge** — UEs out on the internet. Untrusted by default. Everything here must be authenticated (digest) or filtered before it earns any expensive handling.
-- **The core** — gateways, media servers, peer SIP servers. Trusted because they're reached over controlled links and/or authenticated as peers, not because of where their packets seem to originate.
-
-This framing drives the rest of Part 9: **filter cheap and early, authenticate the rest.** Reject the obvious garbage with the least possible work, then spend real CPU only on traffic that has earned it.
+**On UDP, source IP is not identity.** Without digest auth you can conclude nothing about who sent a packet, so a source-IP allowlist is meaningful only on a path you control (a private link to a known peer), never at the open edge. That splits the topology: the **access edge** — untrusted UEs, authenticate or filter before any expensive handling — and the **core** — gateways and peers, trusted via controlled links and peer auth, not apparent origin. Hence the doctrine for the rest of Part 9: **filter cheap and early, authenticate the rest.**
 
 ```mermaid
 flowchart TB
     A[Attacker packet<br/>spoofed source IP] --> SOCK
     G[Legitimate UE] --> SOCK[UDP/5060 socket]
-    SOCK --> P[Parser<br/>3.1 reception]
-    P --> RR["request_route<br/>3.4 routing engine<br/>(route sanity → your drop/exit)"]
+    SOCK --> P[parse_msg<br/>3.1 reception]
+    P --> RR["request_route<br/>3.4 routing engine<br/>(ban lookup / route sanity → drop)"]
     RR --> REJECT[drop / exit<br/>earliest possible reject]
     RR --> WORK[t_relay → shm transaction cell]
 
-    REJECT -.->|cost already spent:<br/>parse + sanity + pkg churn| WASTE[wasted work on hostile traffic]
+    REJECT -.->|already spent:<br/>recv + parse + pkg churn| WASTE[work done for an attacker]
 
     classDef bad fill:#b62324,stroke:#b62324,color:#fff
     classDef good fill:#1f6feb,stroke:#1f6feb,color:#fff
@@ -63,9 +50,7 @@ flowchart TB
     class WASTE,WORK warn
 ```
 
-The diagram's point is the dashed line: the hostile packet rides the *same* pipeline as the good one, and the earliest reject point is still downstream of the parse — inside `request_route`, once your early in-route checks have run. Everything before `drop` is work you did on behalf of an attacker.
-
-So the goal is to move that reject point as far left — and make it as cheap — as possible. That's [9.2](37-security-modules.md): the modules that let you reject earlier and cheaper, starting with source-IP rate limiting in `pike` and progressively more selective filters before you ever spend a transaction.
+The dashed edge is the point: hostile and good packets share one pipeline, and the first reject is downstream of the parse. Moving it left and making it cheap is [9.2](37-security-modules.md) — `pike` rate-limiting and progressively selective filters before you ever spend a transaction.
 
 ---
 

