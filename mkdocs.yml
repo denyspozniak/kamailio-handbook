@@ -82,6 +82,7 @@ plugins:
 
 exclude_docs: |
   /**/README.md
+  superpowers/
 
 extra:
   alternate:
