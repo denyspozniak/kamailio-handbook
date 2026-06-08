@@ -5,6 +5,7 @@
 | Термін | Означає |
 |---|---|
 | **AOR** | Address Of Record — SIP-ідентичність (`alice@example.com`), під якою реєструються контакти. |
+| **apiban** | Спільнотний фід відомих шкідливих SIP source-IP (apiban.org). Не core-модуль Kamailio — споживається втягуванням JSON в `htable` або зовнішнім клієнтом, що оновлює `ipset`/iptables. |
 | **AVP** | Attribute-Value Pair — script-accessible іменована змінна, прив'язана до транзакції чи branch'а. Переживає async suspend/resume. |
 | **branch** | Один destination у forked-транзакції. Кожен branch має свій вихідний буфер, lump-set, retransmission-стан. |
 | **BINRPC** | Бінарний RPC-протокол через Unix-сокет. Дефолтний транспорт для `kamcmd`. |
@@ -17,14 +18,17 @@
 | **dmq** | Distributed Message Queue. Peer-to-peer-replication-мережа між кількома Kamailio-інстансами. |
 | **FFI** | Foreign Function Interface — C-to-script-bridge, що KEMI використовує для диспетчеризації в Lua/Python/JS/Ruby. |
 | **htable** | Generic shm hash-table, «бідний Redis». |
+| **ipban** | Транзитний `htable` зі стокового `kamailio.cfg`. Тримає greylisted source-IP (наповнюється, коли `pike` мітить флудера, протермінується через `autoexpire`); перевіряється рано в `request_route`, щоб дропати порушників. |
 | **KEMI** | Kamailio Embedded Interface. Механізм писання routing'у на Lua, Python, JS, Ruby. |
 | **`KSR.*`** | Глобальний namespace, експонований в KEMI-скриптах. `KSR.tm.t_relay()` дзвонить зареєстровану C-функцію. |
 | **lump** | Queued message-мутація (add чи delete байтів на offset'і). Застосовується одним проходом на send'і. |
 | **mod_init()** | Хук модуля, що біжить раз у main-процесі, до fork'у. Тут виділяється shm і реєструються RPC-команди. |
+| **pike** | Модуль, що відстежує rate запитів per-source-IP через leaky bucket у shm і мітить флуд. |
 | **pkg** | Per-worker приватна купа. Lifetime — одне повідомлення; невидима іншим воркерам. |
 | **pseudo-variable** | Script-side getter/setter на `sip_msg` чи runtime-state. Імена з `$` — `$ru`, `$tu`, `$hdr(X)`, `$var(x)`, `$shv(x)`. |
 | **rank** | Цілий ID forked-воркера. Використовується для RNG-seed'у, вибору timer-слотів, log-disambiguation. |
 | **RPC** | Remote Procedure Call. Runtime-introspection/control-API Kamailio. Через BINRPC і JSON-RPC. |
+| **secfilter** | Модуль, що blacklist'ить/whitelist'ить вміст SIP-заголовків (User-Agent, From, To, domain, dst) і відомі патерни SQL-injection. |
 | **`sip_msg`** | C-struct з розпарсеним повідомленням: оригінальний буфер, header-список, тіло, lump-списки, прапори. Живе у pkg, один на воркера на повідомлення. |
 | **shm** | Спільна пам'ять — один `mmap()`-нутий регіон, доступний з кожного воркера. Lifetime проходить через повідомлення і воркерів. |
 | **`$shv`** | Shared variable. Іменована global у shm. |

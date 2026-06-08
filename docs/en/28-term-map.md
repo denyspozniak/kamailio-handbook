@@ -5,6 +5,7 @@ Quick glossary of Kamailio-specific terms used throughout the handbook. SIP-prot
 | Term | Means |
 |---|---|
 | **AOR** | Address Of Record — the SIP identity (`alice@example.com`) under which contacts are registered. |
+| **apiban** | Community feed of known-bad SIP source IPs (apiban.org). Not a Kamailio core module — consumed by pulling its JSON into an `htable`, or by an external client that updates `ipset`/iptables. |
 | **AVP** | Attribute-Value Pair — a script-accessible named variable, scope-bound to a transaction or branch. Survives async suspend/resume. |
 | **branch** | One destination within a forked transaction. Each branch has its own outgoing buffer, lump set, retransmission state. |
 | **BINRPC** | Binary RPC protocol over Unix socket. The default transport for `kamcmd`. |
@@ -17,14 +18,17 @@ Quick glossary of Kamailio-specific terms used throughout the handbook. SIP-prot
 | **dmq** | Distributed Message Queue. The peer-to-peer replication mesh across multiple Kamailio instances. |
 | **FFI** | Foreign Function Interface — the C-to-script bridge used by KEMI to dispatch into Lua/Python/JS/Ruby interpreters. |
 | **htable** | Generic shm hash table, the "poor man's Redis." |
+| **ipban** | The transient `htable` shipped in the stock `kamailio.cfg`. Holds greylisted source IPs (populated when `pike` flags a flooder, expired via `autoexpire`); checked early in `request_route` to drop offenders. |
 | **KEMI** | Kamailio Embedded Interface. The mechanism for writing routing logic in Lua, Python, JS, or Ruby. |
 | **`KSR.*`** | The global namespace exposed in KEMI scripts. `KSR.tm.t_relay()` calls the registered C function. |
 | **lump** | A queued message mutation (add or delete bytes at an offset). Applied in one pass at send time. |
 | **mod_init()** | Module hook that runs once in the main process, before fork. Where shm is allocated and RPC commands are registered. |
+| **pike** | Module that tracks per-source-IP request rate with a leaky bucket in shm and flags floods. |
 | **pkg** | Per-worker private memory heap. Lifetime is one message; not visible to other workers. |
 | **pseudo-variable** | A script-side getter/setter on the `sip_msg` or runtime state. Names start with `$` — `$ru`, `$tu`, `$hdr(X)`, `$var(x)`, `$shv(x)`. |
 | **rank** | Integer ID of a forked worker process. Used for RNG seeding, timer-slot selection, log disambiguation. |
 | **RPC** | Remote Procedure Call. Kamailio's runtime introspection/control API. Exposed via BINRPC and JSON-RPC. |
+| **secfilter** | Module that blacklists/whitelists SIP header content (User-Agent, From, To, domain, dst) and known SQL-injection patterns. |
 | **`sip_msg`** | The C struct holding a parsed message: original buffer, header list, body, lump lists, flags. Lives in pkg, one per worker per message. |
 | **shm** | Shared memory — one `mmap()`'d region accessible from every worker. Lifetime spans messages and workers. |
 | **`$shv`** | Shared variable. A named global in shm. |

@@ -110,6 +110,12 @@ flowchart LR
 - [10.4 Що ще треба навколо Kamailio](34-ims-full-solution.md) — HSS, PCRF, OCS, DRA, rtpengine, DNS, ядро — чесна межа ✅
 - [10.5 Робочий референс — софтовий IMS-стенд](35-ims-lab.md) — стек `lyatanski/ims` і академічний single-VM-туторіал ✅
 
+### 11. Безпека і hardening
+- [11.1 Поверхня атаки SIP і модель загроз](36-security-surface.md) — чому публічний UDP/5060-сокет відкритий; ціна неавтентифікованого повідомлення; межі довіри 🚧
+- [11.2 Захисні модулі](37-security-modules.md) — `sanity`, `secfilter`, `pike`, `topoh`, digest-auth — що насправді перевіряє кожен 🚧
+- [11.3 Динамічні блок-листи: apiban та ipban](38-security-blocklists.md) — стоковий antiflood у `kamailio.cfg` (htable `ipban` + `pike`) і фід apiban.org 🚧
+- [11.4 Fuzzing і кейс command-injection → RCE](39-security-fuzzing-rce.md) — fuzzing парсера; як SIP-заголовок стає reverse-shell, і де Kamailio є/не є вразливим 🚧
+
 ---
 
 <p align="center">

@@ -97,5 +97,5 @@ IMS ставить Kamailio в обмежену роль: conformant-CSCF, що 
 ---
 
 <p markdown="1" align="center">
-  [← Зміст](../) · [← 10.4 Повне рішення](34-ims-full-solution.md) · [На початок →](index.md)
+  [← Зміст](../) · [← 10.4 Повне рішення](34-ims-full-solution.md) · [Далі: 11.1 Безпека →](36-security-surface.md)
 </p>
