@@ -6,6 +6,64 @@ repo_url: https://github.com/denyspozniak/kamailio-handbook
 repo_name: denyspozniak/kamailio-handbook
 edit_uri: edit/main/docs/
 
+# Explicit nav so the sidebar follows the handbook's logical part order
+# (filename order would scatter parts). i18n folder mode: reference the
+# default-locale (en/) paths; the uk build swaps the folder automatically,
+# and section titles are localised via the i18n plugin's nav_translations.
+nav:
+  - en/index.md
+  - 1. Preface:
+      - en/01-introduction.md
+      - en/01b-sip-primer.md
+  - 2. The Runtime:
+      - en/02-process-model.md
+      - en/03-memory-architecture.md
+      - en/04-concurrency.md
+      - en/05-lifecycle.md
+      - en/06-sizing-and-tuning.md
+  - 3. SIP Message Lifecycle:
+      - en/07-reception.md
+      - en/08-parsed-message.md
+      - en/09-lumps.md
+      - en/10-routing-engine.md
+      - en/11-forwarding.md
+  - 4. The Script Engine:
+      - en/29-script-engine.md
+  - 5. KEMI — embedded scripting:
+      - en/12-kemi-overview.md
+      - en/13-kemi-bridge.md
+      - en/14-kemi-lifecycle.md
+      - en/15-kemi-tradeoffs.md
+  - 6. State, Transactions, Dialogs:
+      - en/16-tm-internals.md
+      - en/17-dialogs.md
+      - en/18-usrloc.md
+  - 7. Control Plane:
+      - en/24-rpc-architecture.md
+      - en/25-kamcmd.md
+      - en/26-event-routes.md
+  - 8. Cool architectural tricks:
+      - en/19-topos.md
+      - en/20-async-transactions.md
+      - en/21-htable.md
+      - en/22-dispatcher.md
+      - en/23-dmq.md
+  - 9. Security & Hardening:
+      - en/36-security-surface.md
+      - en/37-security-modules.md
+      - en/38-security-blocklists.md
+      - en/39-security-fuzzing-rce.md
+  - 10. Kamailio in IMS:
+      - en/31-ims-overview.md
+      - en/32-ims-cscf.md
+      - en/33-ims-diameter.md
+      - en/34-ims-full-solution.md
+      - en/35-ims-lab.md
+  - 11. Reference:
+      - en/27-process-roles.md
+      - en/28-term-map.md
+      - en/30-whats-new.md
+
 theme:
   name: material
   language: en
@@ -79,6 +137,18 @@ plugins:
         - locale: uk
           name: Українська
           build: true
+          nav_translations:
+            "1. Preface": "1. Передмова"
+            "2. The Runtime": "2. Рантайм"
+            "3. SIP Message Lifecycle": "3. Життєвий цикл SIP-повідомлення"
+            "4. The Script Engine": "4. Движок скриптів"
+            "5. KEMI — embedded scripting": "5. KEMI — embedded scripting"
+            "6. State, Transactions, Dialogs": "6. Стан, транзакції, діалоги"
+            "7. Control Plane": "7. Control plane"
+            "8. Cool architectural tricks": "8. Архітектурні фішки"
+            "9. Security & Hardening": "9. Безпека і hardening"
+            "10. Kamailio in IMS": "10. Kamailio в IMS"
+            "11. Reference": "11. Довідник"
 
 exclude_docs: |
   /**/README.md
