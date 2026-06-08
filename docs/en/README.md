@@ -111,10 +111,10 @@ A single received SIP message walks through this pipeline. Most of what looks li
 - [10.5 A worked reference — a software IMS lab](35-ims-lab.md) — the `lyatanski/ims` stack and a single-VM academic tutorial ✅
 
 ### 11. Security & Hardening
-- [11.1 SIP attack surface & threat model](36-security-surface.md) — why a public UDP/5060 socket is exposed; the cost of an unauthenticated message; trust boundaries 🚧
-- [11.2 Defensive modules](37-security-modules.md) — `sanity`, `secfilter`, `pike`, `topoh`, digest auth — what each actually checks 🚧
-- [11.3 Dynamic blocklists: apiban & ipban](38-security-blocklists.md) — the stock `kamailio.cfg` antiflood (`ipban` htable + `pike`) and the apiban.org feed 🚧
-- [11.4 Fuzzing & a command-injection → RCE case study](39-security-fuzzing-rce.md) — fuzzing the parser; how a SIP header becomes a reverse shell, and where Kamailio is/isn't the vuln 🚧
+- [11.1 SIP attack surface & threat model](36-security-surface.md) — why a public UDP/5060 socket is exposed; the cost of an unauthenticated message; trust boundaries ✅
+- [11.2 Defensive modules](37-security-modules.md) — `sanity`, `secfilter`, `pike`, `topoh`, digest auth — what each actually checks ✅
+- [11.3 Dynamic blocklists: apiban & ipban](38-security-blocklists.md) — the stock `kamailio.cfg` antiflood (`ipban` htable + `pike`) and the apiban.org feed ✅
+- [11.4 Fuzzing & a command-injection → RCE case study](39-security-fuzzing-rce.md) — fuzzing the parser; how a SIP header becomes a reverse shell, and where Kamailio is/isn't the vuln ✅
 
 ---
 
