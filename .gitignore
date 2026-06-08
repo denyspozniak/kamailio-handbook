@@ -24,3 +24,6 @@ site/
 # Generated landings (copied from README.md by CI before build)
 docs/*/index.md
 __pycache__/
+
+# Internal design/implementation docs — kept locally, not version-controlled
+docs/superpowers/
