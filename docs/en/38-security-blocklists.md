@@ -5,7 +5,7 @@
 
 ## The antiflood you already shipped
 
-The stock config wires [11.2](37-security-modules.md)'s `pike` detector into an `htable`-backed ban set, and the whole thing is about six lines. First the table is declared:
+The stock config wires [11.2](37-security-modules.md)'s `pike` detector into an `htable`-backed ban set, and the whole thing is a handful of lines. First the table is declared:
 
 ```
 modparam("htable", "htable", "ipban=>size=8;autoexpire=300;")
@@ -43,9 +43,9 @@ The cost of that mercy is honest: a determined attacker churns source IPs. They 
 
 ## apiban — borrowed reputation
 
-[apiban](https://github.com/apiban/apiban) (apiban.org) is the usual way to close that gap, so be precise about what it is: a free external REST service that distributes a curated list of IP addresses *already caught attacking other operators* — collected through globally deployed SIP honeypots. You request an API key, you poll its endpoint over HTTPS, you get JSON back. **It is not a Kamailio module.** There is no `modparam("apiban", ...)`. It is a feed; how you act on the feed is your decision, and there are two layers to act at.
+[apiban](https://github.com/apiban/apiban) (apiban.org) is the usual way to close that gap, so be precise about what it is: a free external REST service that distributes a curated list of IP addresses *already caught attacking other operators* — collected through a network of SIP honeypots. You request an API key, you poll its endpoint over HTTPS, you get JSON back. **It is not a Kamailio module.** There is no `modparam("apiban", ...)`. It is a feed; how you act on the feed is your decision, and there are two layers to act at.
 
-**(a) Kernel-level — the standalone client.** apiban ships clients (Go, bash, nftables, fail2ban) that poll the feed on a timer — typically a `crontab` entry every few minutes — and program the firewall: the iptables client maintains a dedicated `APIBAN` chain and adds each bad IP to it (`ipset`/nftables variants do the same with a kernel set). Once an address is in that set, packets from it are dropped by the kernel *before Kamailio ever parses them* — before `pike`, before the `ipban` lookup, before the SIP stack sees a byte.
+**(a) Kernel-level — the standalone client.** apiban ships clients in Go and bash, with iptables / nftables / `ipset` / fail2ban integrations, that poll the feed on a timer — typically a `crontab` entry every few minutes — and program the firewall: the iptables client maintains a dedicated `APIBAN` chain and adds each bad IP to it (`ipset`/nftables variants do the same with a kernel set). Once an address is in that set, packets from it are dropped by the kernel *before Kamailio ever parses them* — before `pike`, before the `ipban` lookup, before the SIP stack sees a byte.
 
 **(b) In-route — feed pulled into an `htable`.** apiban gives you no Kamailio client for this; you build it. Poll the same JSON feed from inside Kamailio with `http_client` on an `rtimer` clock, and write each returned IP into an `htable` — conceptually the same `ipban` table from above, just populated from the feed instead of from `pike`. Then your existing `$sht(...)` check in `route[REQINIT]` blocks feed IPs and locally-detected flooders with the same line. The block now happens *inside* Kamailio, after parse.
 
