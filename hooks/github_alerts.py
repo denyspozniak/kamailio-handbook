@@ -19,12 +19,13 @@ from __future__ import annotations
 import re
 
 # GitHub alert type -> (Material admonition type, title)
-# Material has no "important" or "caution"; map them to the nearest
-# type and keep GitHub's wording as an explicit title.
+# Material ships no "important" or "caution". "important" is defined in
+# docs/stylesheets/extra.css so it gets GitHub's purple instead of colliding
+# with the blue "note"; "caution" maps to danger with an explicit title.
 ALERTS = {
     "NOTE": ("note", None),
     "TIP": ("tip", None),
-    "IMPORTANT": ("info", "Important"),
+    "IMPORTANT": ("important", None),
     "WARNING": ("warning", None),
     "CAUTION": ("danger", "Caution"),
 }

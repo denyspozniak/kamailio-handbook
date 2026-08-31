@@ -157,6 +157,9 @@ exclude_docs: |
   /**/README.md
   superpowers/
 
+extra_css:
+  - stylesheets/extra.css
+
 extra:
   alternate:
     - name: English

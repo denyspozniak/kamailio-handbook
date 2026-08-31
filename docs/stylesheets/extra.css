@@ -1,0 +1,30 @@
+/* A dedicated "Important" admonition.
+ *
+ * GitHub renders [!IMPORTANT] in purple. Material has no such type, and the
+ * nearest built-ins are all wrong: "info" and "note" are both blue and read as
+ * the same box, "tip" is green, "warning" is orange. So define the type here
+ * and let hooks/github_alerts.py emit `!!! important`.
+ *
+ * Colour follows GitHub's purple; the icon is Material Design's message-alert,
+ * which is the closest match to GitHub's own. */
+
+:root {
+  --md-admonition-icon--important: url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 2H4a2 2 0 0 0-2 2v18l4-4h14a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2m-7 12h-2v-2h2zm0-4h-2V6h2z"/></svg>');
+}
+
+.md-typeset .admonition.important,
+.md-typeset details.important {
+  border-color: rgb(124, 77, 255);
+}
+
+.md-typeset .important > .admonition-title,
+.md-typeset .important > summary {
+  background-color: rgba(124, 77, 255, 0.1);
+}
+
+.md-typeset .important > .admonition-title::before,
+.md-typeset .important > summary::before {
+  background-color: rgb(124, 77, 255);
+  -webkit-mask-image: var(--md-admonition-icon--important);
+          mask-image: var(--md-admonition-icon--important);
+}
