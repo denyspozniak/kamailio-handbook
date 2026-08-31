@@ -126,6 +126,7 @@ markdown_extensions:
 
 hooks:
   - hooks/edit_url.py
+  - hooks/github_alerts.py
 
 plugins:
   - search
